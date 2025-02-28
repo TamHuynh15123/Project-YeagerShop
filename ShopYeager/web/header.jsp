@@ -125,7 +125,7 @@
             </div>
             <div class="user-actions">
                 <div class="login">
-                    <a href="#">🔑 Đăng nhập</a>
+                    <a href="login.jsp">🔑 Đăng nhập</a>
                 </div>
                 <div class="cart">
                     <a href="#">🛒 Giỏ hàng</a>
