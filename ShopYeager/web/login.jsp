@@ -126,7 +126,7 @@
             </div>
 
             <div class="register-link">
-                Don't have an account? <a href="${pageContext.request.contextPath}/views/register.jsp">Sign up</a>
+                Don't have an account? <a href="signUp.jsp">Sign up</a>
             </div>
 
         </div>
