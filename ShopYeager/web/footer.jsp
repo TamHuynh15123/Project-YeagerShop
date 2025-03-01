@@ -23,24 +23,24 @@
             .footer-container {
                 max-width: 1200px;
                 margin: auto;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
             }
-
             .footer-logo {
                 width: 100px;
-                height: auto;
-                margin-bottom: 10px;
             }
-
             .footer-title {
-                margin: 5px 0;
+                margin: 0;
             }
-
-            .footer-description {
-                max-width: 500px;
-                font-size: 14px;
+            .footer-links a {
+                color: #fff;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+            .footer-links a:hover {
+                text-decoration: underline;
+            }
+            .footer-social img {
+                width: 24px;
+                margin: 5px;
             }
         </style>
     </head>
@@ -49,12 +49,22 @@
     </body>
     <footer class="footer">
         <div class="footer-container">
-            <img src="img/logo2.png" alt="Logo Shop" class="footer-logo">
+            <img src="img/logo2.png" alt="Logo" class="footer-logo">
             <h2 class="footer-title">YeagerShop</h2>
-            <p class="footer-description">Chúng tôi cung cấp những sản phẩm chất lượng tốt nhất với giá cả hợp lý.</p>
-            <p><strong>Địa chỉ:</strong> 123 Đường ABC, Quận XYZ, Thành phố HCM</p>
-            <p><strong>Email:</strong> Yeagershop@gmail.com</p>
-            <p><strong>Điện thoại:</strong> 0123 456 789</p>
+            <p>&copy; 2025 - Mọi quyền được bảo lưu.</p>
+
+            <div class="footer-links">
+                <a href="#">Giới thiệu</a> |
+                <a href="#">Chính sách bảo mật</a> |
+                <a href="#">Điều khoản sử dụng</a> |
+                <a href="#">Liên hệ</a>
+            </div>
+
+            <div class="footer-social">
+                <a href="#"><img src="img/icons8-facebook-60.png" alt="Facebook"></a>
+                <a href="#"><img src="img/icons8-tiktok-50.png" alt="Tiktok"></a>
+                <a href="#"><img src="img/icons8-instagram-48.png" alt="Instagram"></a>
+            </div>
         </div>
     </footer>
 </html>
