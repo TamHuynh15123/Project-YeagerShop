@@ -131,6 +131,7 @@
             <input type="text" id="searchInput" name="searchTerm" value="<%=searchTerm%>" class="search-input" placeholder="Enter project name"/>
             <input type="submit" value="Search" class="search-btn"/>
         </form>
+
         <form action="project.jsp" method="get" style="margin-top: 10px;">
             <button type="submit" style="background-color: green; color: white; padding: 10px 15px; border: none; cursor: pointer; font-size: 16px; border-radius: 5px;">
                 Add Project
