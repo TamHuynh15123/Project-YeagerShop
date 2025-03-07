@@ -116,7 +116,7 @@ public class MainController extends HttpServlet {
     private String ProcessSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null) {
+        if (isFounder(session)) {
             // search
             search(request, response);
             return SEARCH_PAGE;

@@ -1,0 +1,20 @@
+CREATE TABLE Products (
+    product_id INT IDENTITY(1,1) PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    description TEXT,
+    quantity INT DEFAULT 0,
+    active INT DEFAULT 1   
+);
+
+INSERT INTO Products (product_name, description, quantity, active, price) VALUES
+('Áo choàng đội trinh sát', 'Áo choàng đội trinh sát Chất liệu : Vải Polyester , lót bên trong là vải dù.', 10, 1, 1500.00),
+('Đồng hồ bỏ tú', 'Đồng hồ bỏ tú in logo trinh sát Chất liệu :vCeramics mạ bạc.', 5, 1, 1200.00),
+('Mô Hình Eren Yeager', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 20, 1, 75.50),
+('Dây chuyền đội trinh sát', 'Chất liệu: bạc', 15, 1, 99.99),
+('Mô hình Mikasa Ackerman', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 8, 1, 300.00),
+('Mô Hình Levi Ackerman', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 25, 1, 150.00),
+('Mô hình Armin Arlert', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 12, 1, 129.99),
+('Mô Hình Reiner Braun', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 3, 1, 2500.00),
+('Mô Hình Bertholdt Hoover', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 7, 1, 399.99),
+('Mô Hình Annie', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 10, 1, 89.99);
