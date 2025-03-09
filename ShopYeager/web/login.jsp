@@ -108,22 +108,14 @@
     <body>
 
         <div class="login-container">
-            <h2>Login</h2>
-            <form action="<%= request.getContextPath()%>/LoginController" method="post">
-                <input type="text" name="userID" placeholder="User ID" required>
-                <input type="password" name="password" placeholder="Password" required>
+            <h2>Sign In</h2>
+            <form action="TrangChu" method="POST">
+                <input type="hidden" name="action" value="login">
+                <input type="text" name="txtEmail" placeholder="Your Email" required>
+                <input type="password" name="txtPassword" placeholder="Your Password" required>
                 <input type="submit" value="Login">
             </form>
-            <button onclick="window.location.href = '<%= request.getContextPath()%>/index.jsp'" 
-                    class="home-button">
-                Home
-            </button>
-
-            <div class="error-message">
-                <% if (request.getAttribute("ERROR") != null) {%>
-                <%= request.getAttribute("ERROR")%>
-                <% }%>
-            </div>
+            <p style="color:red">${message}</p>
 
             <div class="register-link">
                 Don't have an account? <a href="signUp.jsp">Sign up</a>
