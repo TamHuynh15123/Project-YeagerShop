@@ -18,3 +18,16 @@ INSERT INTO Products (product_name, description, quantity, active, price) VALUES
 ('Mô Hình Reiner Braun', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 3, 1, 2500.00),
 ('Mô Hình Bertholdt Hoover', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 7, 1, 399.99),
 ('Mô Hình Annie', 'Chất liệu nhựa pvc, Tỷ lệ 1:12', 10, 1, 89.99);
+
+
+CREATE TABLE Users (
+    userid VARCHAR(50) PRIMARY KEY,
+    name NVARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    roleID VARCHAR(50) NOT NULL DEFAULT 'user'
+);
+INSERT INTO Users (userid, name, email, password)
+VALUES 
+
+('user01', 'Nguyen Van A', 'user@example.com', 'user123');
