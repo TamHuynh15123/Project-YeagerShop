@@ -16,16 +16,16 @@ import javax.servlet.http.HttpSession;
 public class AuthUtils {
 
     public static final String ADMIN_ROLE = "admin";
-    public static final String USER_TOLE = "US";
+    public static final String USER_TOLE = "user";
 
-    public static UserDTO getUser(String email) {
+    public static UserDTO getUser(String userid) {
         UserDAO udao = new UserDAO();
-        UserDTO user = udao.readById(email);
+        UserDTO user = udao.readById(userid);
         return user;
     }
 
-    public static boolean isValidLogin(String email, String strPassword) {
-        UserDTO user = getUser(email);
+    public static boolean isValidLogin(String userid, String strPassword) {
+        UserDTO user = getUser(userid);
         System.out.println(user);
 //        System.out.println(user.getPassword());
         System.out.println(strPassword);

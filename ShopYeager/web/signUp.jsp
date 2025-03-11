@@ -75,8 +75,10 @@
     <body>
         <div class="register-container">
             <h2>Sign Up</h2>
-            <form action="RegisterServlet" method="post">
+            <form action="TrangChu" method="post">
+                <input type="hidden"name="action" value="signup" >
                 <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="name" placeholder="name" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <input type="password" name="confirmPassword" placeholder="Confirm password" required>
@@ -85,8 +87,7 @@
             <p>Have an account? 
                 <a href = "login.jsp">Login</a>
             </p>
-    </head>
-    <body>
-        
+    
+        </div>
     </body>
 </html>

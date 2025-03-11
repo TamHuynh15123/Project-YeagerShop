@@ -1,7 +1,9 @@
 package controller;
 
 import dao.ProductsDAO;
+import dao.UserDAO;
 import dto.ProductsDTO;
+import dto.UserDTO;
 import utils.AuthUtils;
 
 import java.io.IOException;
@@ -26,16 +28,16 @@ public class TrangChu extends HttpServlet {
     private String processLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = LOGIN_PAGE;
-        String email = request.getParameter("txtEmail");
+        String userid = request.getParameter("txtUserID");
         String password = request.getParameter("txtPassword");
 
-        if (AuthUtils.isValidLogin(email, password)) {
+        if (AuthUtils.isValidLogin(userid, password)) {
             url = HOME_PAGE;
             HttpSession session = request.getSession();
-            session.setAttribute("user", AuthUtils.getUser(email));
+            session.setAttribute("user", AuthUtils.getUser(userid));
             request.getRequestDispatcher(HOME_PAGE).forward(request, response);
         } else {
-            request.setAttribute("message", "Email or password incorrect!!");
+            request.setAttribute("message", "UserID or password incorrect!!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
         return url;
@@ -48,6 +50,39 @@ public class TrangChu extends HttpServlet {
             session.invalidate();
         }
         return LOGIN_PAGE;
+    }
+    private String processSignup(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+         // Lấy thông tin từ form
+    String username = request.getParameter("username");
+    String name = request.getParameter("name");
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
+    String confirmPassword = request.getParameter("confirmPassword");
+    
+    // Kiểm tra password có khớp không
+    if (!password.equals(confirmPassword)) {
+        request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
+        return "signup.jsp";  // Trang hiển thị lỗi đăng ký
+    }
+
+    // Tạo UserDTO để lưu thông tin
+    UserDTO newUser = new UserDTO(username, name, email, password);
+    
+    // Gọi DAO để lưu vào database
+    UserDAO dao = new UserDAO();
+    boolean created = dao.create(newUser);
+    
+    if (created) {
+        // Đăng ký thành công, chuyển về trang login
+        request.setAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
+        return "login.jsp";
+    } else {
+        // Đăng ký thất bại
+        request.setAttribute("error", "Đăng ký thất bại. Tên người dùng có thể đã tồn tại.");
+        return "signup.jsp";
+    }
     }
 
     private String processShowProducts(HttpServletRequest request, HttpServletResponse response)
@@ -89,6 +124,8 @@ public class TrangChu extends HttpServlet {
             } else {
                 if (action.equals("login")) {
                     url = processLogin(request, response);
+                } else if (action.equals("signup")) {
+                    url = processSignup(request, response);
                 } else if (action.equals("logout")) {
                     url = processLogout(request, response);
                 } else if (action.equals("showProducts")) {

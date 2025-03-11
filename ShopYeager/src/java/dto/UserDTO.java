@@ -11,8 +11,8 @@ package dto;
  */
 public class UserDTO {
 
-    private String id;
-    private String username;
+    private String userid;
+    private String name;
     private String email;
     private String password;
     private String roleID;
@@ -20,28 +20,35 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String id, String username, String email, String password, String roleID) {
-        this.id = id;
-        this.username = username;
+    public UserDTO(String userid, String name, String email, String password) {
+        this.userid = userid;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserDTO(String userid, String name, String email, String password, String roleID) {
+        this.userid = userid;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.roleID = roleID;
     }
 
-    public String getId() {
-        return id;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -70,7 +77,7 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserDTO{" + "id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", roleID=" + roleID + '}';
+        return "UserDTO{" + "userid=" + userid + ", name=" + name + ", email=" + email + ", password=" + password + ", roleID=" + roleID + '}';
     }
 
 }
