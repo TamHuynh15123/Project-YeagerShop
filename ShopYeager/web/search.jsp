@@ -111,7 +111,7 @@
             if (user != null) {
         %>
 
-        <h1>Welcome, <%=user.getName()%></h1>
+        
 
         <%-- Logout Form --%>
         <form action="TrangChu" method="post">

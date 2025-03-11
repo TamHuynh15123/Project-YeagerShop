@@ -35,7 +35,7 @@ public class TrangChu extends HttpServlet {
             url = HOME_PAGE;
             HttpSession session = request.getSession();
             session.setAttribute("user", AuthUtils.getUser(userid));
-            request.getRequestDispatcher(HOME_PAGE).forward(request, response);
+
         } else {
             request.setAttribute("message", "UserID or password incorrect!!");
             request.getRequestDispatcher("login.jsp").forward(request, response);
@@ -51,38 +51,39 @@ public class TrangChu extends HttpServlet {
         }
         return LOGIN_PAGE;
     }
+
     private String processSignup(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-         // Lấy thông tin từ form
-    String username = request.getParameter("username");
-    String name = request.getParameter("name");
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
-    String confirmPassword = request.getParameter("confirmPassword");
-    
-    // Kiểm tra password có khớp không
-    if (!password.equals(confirmPassword)) {
-        request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
-        return "signup.jsp";  // Trang hiển thị lỗi đăng ký
-    }
+        // Lấy thông tin từ form
+        String username = request.getParameter("username");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-    // Tạo UserDTO để lưu thông tin
-    UserDTO newUser = new UserDTO(username, name, email, password);
-    
-    // Gọi DAO để lưu vào database
-    UserDAO dao = new UserDAO();
-    boolean created = dao.create(newUser);
-    
-    if (created) {
-        // Đăng ký thành công, chuyển về trang login
-        request.setAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
-        return "login.jsp";
-    } else {
-        // Đăng ký thất bại
-        request.setAttribute("error", "Đăng ký thất bại. Tên người dùng có thể đã tồn tại.");
-        return "signup.jsp";
-    }
+        // Kiểm tra password có khớp không
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Mật khẩu xác nhận không khớp!");
+            return "signup.jsp";  // Trang hiển thị lỗi đăng ký
+        }
+
+        // Tạo UserDTO để lưu thông tin
+        UserDTO newUser = new UserDTO(username, name, email, password);
+
+        // Gọi DAO để lưu vào database
+        UserDAO dao = new UserDAO();
+        boolean created = dao.create(newUser);
+
+        if (created) {
+            // Đăng ký thành công, chuyển về trang login
+            request.setAttribute("message", "Đăng ký thành công! Vui lòng đăng nhập.");
+            return "login.jsp";
+        } else {
+            // Đăng ký thất bại
+            request.setAttribute("error", "Đăng ký thất bại. Tên người dùng có thể đã tồn tại.");
+            return "signup.jsp";
+        }
     }
 
     private String processShowProducts(HttpServletRequest request, HttpServletResponse response)
@@ -93,6 +94,17 @@ public class TrangChu extends HttpServlet {
             request.setAttribute("products", products);
             return HOME_PAGE;
         }
+        String pageParam = request.getParameter("page");
+        int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1; // Mặc định là trang 1
+        int productsPerPage = 10; // Số sản phẩm trên mỗi trang
+
+        List<ProductsDTO> products = productsDAO.getProductsByPage(page, productsPerPage);
+        int totalProducts = productsDAO.getTotalProducts();
+        int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
+
+        request.setAttribute("products", products);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
         return LOGIN_PAGE;
     }
 

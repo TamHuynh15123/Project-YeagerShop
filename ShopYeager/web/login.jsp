@@ -106,7 +106,7 @@
         </style>
     </head>
     <body>
-
+        
         <div class="login-container">
             <h2>Sign In</h2>
             <form action="TrangChu" method="POST">
@@ -114,6 +114,7 @@
                 <input type="text" name="txtUserID" placeholder="User Id" required>
                 <input type="password" name="txtPassword" placeholder="Password" required>
                 <input type="submit" value="Login">
+                
             </form>
             <p style="color:red">${message}</p>
 
