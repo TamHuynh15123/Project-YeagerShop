@@ -91,20 +91,25 @@ public class TrangChu extends HttpServlet {
         HttpSession session = request.getSession();
         if (AuthUtils.isLoggedIn(session)) {
             List<ProductsDTO> products = productsDAO.readAll();
-            request.setAttribute("products", products);
+            int page, numberpage=10;
+            int size = products.size();
+            int num = (size%10 == 0 ?(size/10):((size/10))+1);
+            String xpage = request.getParameter("page");
+            if(xpage == null){
+                page = 1;
+            }else{
+                page = Integer.parseInt(xpage);
+            }
+            int start,end;
+            start = (page-1)*numberpage;
+            end = Math.min(page*numberpage, size);
+            List<ProductsDTO> products1 = productsDAO.getProductsByPage(products, start, end);
+            request.setAttribute("products", products1);
+            request.setAttribute("page", page);
+            request.setAttribute("num", num);
             return HOME_PAGE;
         }
-        String pageParam = request.getParameter("page");
-        int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1; // Mặc định là trang 1
-        int productsPerPage = 10; // Số sản phẩm trên mỗi trang
-
-        List<ProductsDTO> products = productsDAO.getProductsByPage(page, productsPerPage);
-        int totalProducts = productsDAO.getTotalProducts();
-        int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
-
-        request.setAttribute("products", products);
-        request.setAttribute("currentPage", page);
-        request.setAttribute("totalPages", totalPages);
+        
         return LOGIN_PAGE;
     }
 

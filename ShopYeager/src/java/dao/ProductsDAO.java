@@ -107,31 +107,12 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
         return false;
     }
 
-    public List<ProductsDTO> getProductsByPage(int page, int productsPerPage) {
-        List<ProductsDTO> list = new ArrayList<>();
-        int offset = (page - 1) * productsPerPage;
-        String sql = "SELECT product_id, product_name, price, description, quantity, active FROM Products WHERE active = 1 LIMIT ? OFFSET ? ";
-
-        try (Connection conn = DBUtils.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, productsPerPage);
-            ps.setInt(2, offset);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                list.add(new ProductsDTO(
-                        rs.getString("productID"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getString("description"),
-                        rs.getInt("quantity"),
-                        rs.getBoolean("active")
-                ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public List<ProductsDTO> getProductsByPage(List<ProductsDTO> list,int start, int end) {
+        ArrayList<ProductsDTO> arr = new ArrayList<>();
+        for(int i = start; i< end; i++){
+            arr.add(list.get(i));
         }
-        return list;
+        return arr;
     }
 
     public int getTotalProducts() {
