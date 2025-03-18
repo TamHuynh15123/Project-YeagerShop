@@ -107,10 +107,10 @@ public class TrangChu extends HttpServlet {
             request.setAttribute("products", products1);
             request.setAttribute("page", page);
             request.setAttribute("num", num);
-            return HOME_PAGE;
+            request.getRequestDispatcher("menuhome.jsp").forward(request, response);
         }
         
-        return LOGIN_PAGE;
+        return null;
     }
 
     private String processSearch(HttpServletRequest request, HttpServletResponse response)
