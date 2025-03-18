@@ -10,6 +10,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <style>
+
             .hero-section {
                 position: relative;
             }
@@ -56,15 +57,61 @@
                 align-items: center;
                 padding: 0 1rem;
             }
-
-            .categories-links a {
+            .categories-links {
+                display: flex;
+                align-items: center;
+            }
+            .categories-links span{
                 color: white;
                 margin-left: 0.5rem;
+                text-align: left;
+            }
+
+            .menu {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                gap: 15px;
+            }
+
+            .menu li {
+                display: inline;
+            }
+
+            .menu li a {
+                text-decoration: none;
+                color: white;
+                font-size: 14px;
+                transition: color 0.3s ease;
+            }
+
+            .menu li a:hover,
+            .menu li a.active {
+                text-decoration: underline;
+                font-weight: bold;
+            }
+
+            /* Style cho ô tìm kiếm */
+            .search-container {
+                position: relative;
             }
 
             .search-input {
-                padding: 0.5rem 1rem;
-                border-radius: 0.25rem;
+                padding: 8px 30px 8px 10px; /* Dành không gian cho icon */
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            /* Icon tìm kiếm */
+            .search-icon {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: gray;
+                cursor: pointer;
             }
 
             /* Products Section */
@@ -78,24 +125,6 @@
                 display: grid;
                 gap: 1.5rem;
                 grid-template-columns: repeat(1, 1fr);
-            }
-
-            @media (min-width: 640px) {
-                .products-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
-
-            @media (min-width: 768px) {
-                .products-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-            }
-
-            @media (min-width: 1024px) {
-                .products-grid {
-                    grid-template-columns: repeat(5, 1fr);
-                }
             }
 
             .product-card {
@@ -189,12 +218,23 @@
             <div class="categories-container">
                 <div class="categories-links">
                     <span class="font-bold">Categories:</span>
-                    <a href="#">All</a>
-                    <a href="#">Balo/Áo khoác</a>
-                    <a href="#">Mô hình</a>
-                    <a href="#">Phụ kiện</a>
+                    <c:set var="cat" value="${requestScope.data}"/>
+                    <c:set var="cid" value="${requestScope.cid}"/>
+                    <ul class="menu">
+                        <li><a class="${cid==0 ? 'active' : ''}" href="home?cid=0">
+                                <i class="fas fa-th"></i> All
+                            </a></li>
+                            <c:forEach items="${cat}" var="c">
+                            <li><a class="${c.category_id == cid ? 'active' : ''}" href="home?cid=${c.category_id}">
+                                    <i class="fas fa-tag"></i> ${c.category_name}
+                                </a></li>
+                            </c:forEach>
+                    </ul>
                 </div>
-                <input type="text" placeholder="Search" class="search-input">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
             </div>
         </div>
 

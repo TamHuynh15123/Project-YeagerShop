@@ -82,13 +82,7 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ProductsDTO product = new ProductsDTO(
-                        rs.getString("product_id"),
-                        rs.getString("product_name"),
-                        rs.getDouble("price"),
-                        rs.getString("description"),
-                        rs.getInt("quantity"),
-                        rs.getBoolean("active"),
-                        rs.get("category_id")
+                        
                 );
                 products.add(product);
             }

@@ -1,7 +1,9 @@
 package controller;
 
+import dao.CategoryDAO;
 import dao.ProductsDAO;
 import dao.UserDAO;
+import dto.CategoryDTO;
 import dto.ProductsDTO;
 import dto.UserDTO;
 import utils.AuthUtils;
@@ -127,7 +129,17 @@ public class TrangChu extends HttpServlet {
         productsDAO.updateQuantityToZero(productId);
         return processShowProducts(request, response);
     }
-
+    private String categories(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        CategoryDAO d = new CategoryDAO();
+        List<CategoryDTO> list = d.getAll();
+        boolean[] chid = new boolean[list.size()+1];
+        request.setAttribute("data", list);
+        request.setAttribute("cid", 0);
+        request.setAttribute("chid", chid);
+        request.getRequestDispatcher("Menuhome.jsp").forward(request, response);
+        return null;
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -151,6 +163,8 @@ public class TrangChu extends HttpServlet {
                     url = processSearch(request, response);
                 } else if (action.equals("updateQuantity")) {
                     url = processUpdateQuantity(request, response);
+                } else if (action.equals("cid")){
+                    url = categories(request, response);
                 }
             }
         } catch (Exception e) {
