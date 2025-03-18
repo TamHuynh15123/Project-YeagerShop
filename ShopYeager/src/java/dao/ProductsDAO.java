@@ -27,21 +27,23 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
     @Override
     public List<ProductsDTO> readAll() {
         List<ProductsDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE active = 1";
         try {
             Connection conn = DBUtils.getConnection();
-            String sql = "SELECT productID, name, price, quantity, active FROM Products WHERE active = 1";
+            
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                String id = rs.getString("productID");
-                String name = rs.getString("name");
-                double price = rs.getDouble("price");
-                String description = rs.getString("description");
-                int quantity = rs.getInt("quantity");
-                boolean active = rs.getBoolean("active");
+                ProductsDTO p = new ProductsDTO();
+                p.setProduct_id(rs.getString("product_id"));
+                p.setProduct_name(rs.getString("product_name"));
+                p.setPrice(rs.getDouble("price"));
+                p.setDescription(rs.getString("description"));
+                p.setQuantity(rs.getInt("quantity"));
+                p.setActive(true);
 
-                list.add(new ProductsDTO(id, name, price, description, quantity, active));
+                list.add(p);
             }
             conn.close();
         } catch (Exception e) {
@@ -73,19 +75,20 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
 
     public List<ProductsDTO> searchByName(String name) {
         List<ProductsDTO> products = new ArrayList<>();
-        String sql = "SELECT id, name, price, description, quantity, active FROM Products WHERE name LIKE ?";
+        String sql = "SELECT product_id, product_name, price, description, quantity, active, category_id FROM Products WHERE name LIKE ?";
         try (Connection conn = DBUtils.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "%" + name + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ProductsDTO product = new ProductsDTO(
-                        rs.getString("id"),
-                        rs.getString("name"),
+                        rs.getString("product_id"),
+                        rs.getString("product_name"),
                         rs.getDouble("price"),
                         rs.getString("description"),
                         rs.getInt("quantity"),
-                        rs.getBoolean("active")
+                        rs.getBoolean("active"),
+                        rs.get("category_id")
                 );
                 products.add(product);
             }
@@ -107,31 +110,12 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
         return false;
     }
 
-    public List<ProductsDTO> getProductsByPage(int page, int productsPerPage) {
-        List<ProductsDTO> list = new ArrayList<>();
-        int offset = (page - 1) * productsPerPage;
-        String sql = "SELECT product_id, product_name, price, description, quantity, active FROM Products WHERE active = 1 LIMIT ? OFFSET ? ";
-
-        try (Connection conn = DBUtils.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, productsPerPage);
-            ps.setInt(2, offset);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                list.add(new ProductsDTO(
-                        rs.getString("productID"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getString("description"),
-                        rs.getInt("quantity"),
-                        rs.getBoolean("active")
-                ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public List<ProductsDTO> getProductsByPage(List<ProductsDTO> list,int start, int end) {
+        ArrayList<ProductsDTO> arr = new ArrayList<>();
+        for(int i = start; i< end; i++){
+            arr.add(list.get(i));
         }
-        return list;
+        return arr;
     }
 
     public int getTotalProducts() {
