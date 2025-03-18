@@ -42,4 +42,22 @@ public class CategoryDAO {
         }
         return list;
     }
+    public CategoryDTO getCategoryByID(int id){
+        try {
+            String sql = "SELECT * from Categories where category_id=?";
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                CategoryDTO c = new CategoryDTO(rs.getInt("category_id"), rs.getString("category_name"));
+                return c;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
