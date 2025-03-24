@@ -51,7 +51,7 @@ public class TrangChu extends HttpServlet {
         if (AuthUtils.isLoggedIn(session)) {
             session.invalidate();
         }
-        return LOGIN_PAGE;
+        return HOME_PAGE;
     }
 
     private String processSignup(HttpServletRequest request, HttpServletResponse response)
@@ -149,7 +149,7 @@ public class TrangChu extends HttpServlet {
             String action = request.getParameter("action");
             System.out.println("action: " + action);
             if (action == null) {
-                url = LOGIN_PAGE;
+                url = HOME_PAGE;
             } else {
                 if (action.equals("login")) {
                     url = processLogin(request, response);
