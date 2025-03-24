@@ -57,3 +57,11 @@ INSERT INTO Users (userid, name, email, password)
 VALUES 
 
 ('user01', 'Nguyen Van A', 'user@example.com', 'user123');
+
+SELECT category_id, category_name FROM Categories
+SELECT * from Categories where category_id=1
+
+SELECT p.product_id, p.product_name, p.price, p.description, p.quantity, p.active, c.category_id, c.category_name
+FROM [dbo].[Products] p
+LEFT JOIN [dbo].[Categories] c
+ON c.category_id = p.category_id;
