@@ -12,38 +12,40 @@ CREATE TABLE Categories (
     category_id INT IDENTITY(1,1) PRIMARY KEY,
     category_name VARCHAR(255) NOT NULL UNIQUE
 );
+INSERT [dbo].[Categories] ([category_id], [category_name]) VALUES (1, N'Balo/Áo khoác')
+INSERT [dbo].[Categories] ([category_id], [category_name]) VALUES (2, N'Mô hình')
+INSERT [dbo].[Categories] ([category_id], [category_name]) VALUES (3, N'Phụ kiện')
 
-
-INSERT INTO Products (product_name, price, description, quantity, active, category_id) VALUES
-product_id	product_name	price	description	quantity	active	category_id
-1	Áo choàng đội trinh sát Loại 1	1500.00	Áo choàng d?i trinh sát Ch?t li?u : V?i Polyester , lót bên trong là v?i dù.	10	1	1
-2	Vòng tay Logo Trinh Sát	1200.00	Ð?ng h? b? tú in logo trinh sát Ch?t li?u :vCeramics m? b?c.	5	1	3
-3	Mô Hình Eren Yeager Thiếu niên 1	75.50	Ch?t li?u nh?a pvc, T? l? 1:12	20	1	2
-4	Mô hình Mikasa Ackerman Loại 2	99.99	Ch?t li?u: b?c	15	1	2
-5	Mô hình Mikasa Ackerman Loại 1	300.00	Ch?t li?u nh?a pvc, T? l? 1:12	8	1	2
-6	Mô Hình Levi Ackerman Loại 1	150.00	Ch?t li?u nh?a pvc, T? l? 1:12	25	1	2
-7	Mô hình Reiner Braun Loại 2	129.99	Ch?t li?u nh?a pvc, T? l? 1:12	12	1	2
-8	Mô Hình Reiner Braun Loại 1	2500.00	Ch?t li?u nh?a pvc, T? l? 1:12	3	1	2
-9	Mô Hình Titan Đại Hình	399.99	Ch?t li?u nh?a pvc, T? l? 1:12	7	1	2
-10	Mô Hình Annie Loại 1	89.99	Ch?t li?u nh?a pvc, T? l? 1:12	10	1	2
-11	Combo Mô Hình Hanji	250.00	Mô hình nhân v?t Naruto Uzumaki.	15	1	2
-12	Combo Mô Hình Khác Loại	270.00	Mô hình nhân v?t Sasuke Uchiha.	10	1	2
-13	Áo Hoddie Màu Loại 1 	300.00	Mô hình nhân v?t Luffy trong One Piece.	20	1	1
-14	Áo Hoddie Màu loại 2	320.00	Mô hình nhân v?t Zoro trong One Piece.	12	1	1
-15	Mô Hình Levi Ackerman Loại 2	350.00	Mô hình nhân v?t Goku.	18	1	2
-16	Mô Hình Levi Ackerman Loại 3	370.00	Mô hình nhân v?t Vegeta.	8	1	2
-17	Mô Hình Titan Tiến Công	280.00	Mô hình nhân v?t Tanjiro Kamado.	14	1	2
-18	Mô Hình Eren Yeager Thiếu niên 2	260.00	Mô hình nhân v?t Nezuko Kamado.	22	1	2
-19	Mô Hình Eren Yeager Thiếu niên 3	400.00	Mô hình nhân v?t Gojo Satoru.	9	1	2
-20	Mô Hình Eren Yeager Trưởng Thành	380.00	Mô hình nhân v?t Sukuna.	11	1	2
-21	Mô Hình Armin 	500.00	Mô hình nhân v?t Levi.	7	1	2
-22	Combo phụ kiện móc khóa	450.00	Mô hình nhân v?t Eren.	6	1	3
-23	Combo phụ kiện dây chuyền	420.00	Mô hình nhân v?t Mikasa.	13	1	3
-24	Note Book Attack on Titan	310.00	Mô hình nhân v?t Zenitsu.	17	1	3
-25	Dây Chuyền Trinh Sát 	330.00	Mô hình nhân v?t Inosuke.	16	1	3
-26	Balo Logo Trinh Sát Màu Nâu	390.00	Mô hình nhân v?t Itachi Uchiha.	5	1	1
-27	Balo Logo Trinh Sát Màu Đen	550.00	Mô hình nhân v?t Madara Uchiha.	4	1	1
-28	Áo choàng đội trinh sát Loại 2	200.00	Mô hình nhân v?t Boruto Uzumaki.	21	1	1
+INSERT INTO Products (product_name, price, description, quantity, active, category_id) 
+VALUES
+(N'Áo choàng đội trinh sát Loại 1', CAST(1500.00 AS Decimal(10, 2)), N'Áo choàng d?i trinh sát Ch?t li?u : V?i Polyester , lót bên trong là v?i dù.', 10, 1, 1)
+(N'Vòng tay Logo Trinh Sát', CAST(1200.00 AS Decimal(10, 2)), N'Ð?ng h? b? tú in logo trinh sát Ch?t li?u :vCeramics m? b?c.', 5, 1, 3)
+(N'Mô Hình Eren Yeager Thiếu niên 1', CAST(75.50 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 20, 1, 2)
+(N'Mô hình Mikasa Ackerman Loại 2', CAST(99.99 AS Decimal(10, 2)), N'Ch?t li?u: b?c', 15, 1, 2)
+(N'Mô hình Mikasa Ackerman Loại 1', CAST(300.00 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 8, 1, 2)
+(N'Mô Hình Levi Ackerman Loại 1', CAST(150.00 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 25, 1, 2)
+(N'Mô hình Reiner Braun Loại 2', CAST(129.99 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 12, 1, 2)
+(N'Mô Hình Reiner Braun Loại 1', CAST(2500.00 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 3, 1, 2)
+(N'Mô Hình Titan Đại Hình', CAST(399.99 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 7, 1, 2)
+(N'Mô Hình Annie Loại 1', CAST(89.99 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 10, 1, 2)
+(N'Combo Mô Hình Hanji', CAST(250.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Naruto Uzumaki.', 15, 1, 2)
+(N'Combo Mô Hình Khác Loại', CAST(270.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Sasuke Uchiha.', 10, 1, 2)
+(N'Áo Hoddie Màu Loại 1 ', CAST(300.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Luffy trong One Piece.', 20, 1, 1)
+(N'Áo Hoddie Màu loại 2', CAST(320.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Zoro trong One Piece.', 12, 1, 1)
+(N'Mô Hình Levi Ackerman Loại 2', CAST(350.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Goku.', 18, 1, 2)
+(N'Mô Hình Levi Ackerman Loại 3', CAST(370.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Vegeta.', 8, 1, 2)
+(N'Mô Hình Titan Tiến Công', CAST(280.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Tanjiro Kamado.', 14, 1, 2)
+(N'Mô Hình Eren Yeager Thiếu niên 2', CAST(260.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Nezuko Kamado.', 22, 1, 2)
+(N'Mô Hình Eren Yeager Thiếu niên 3', CAST(400.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Gojo Satoru.', 9, 1, 2)
+(N'Mô Hình Eren Yeager Trưởng Thành', CAST(380.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Sukuna.', 11, 1, 2)
+(N'Mô Hình Armin ', CAST(500.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Levi.', 7, 1, 2)
+(N'Combo phụ kiện móc khóa', CAST(450.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Eren.', 6, 1, 3)
+(N'Combo phụ kiện dây chuyền', CAST(420.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Mikasa.', 13, 1, 3)
+(N'Note Book Attack on Titan', CAST(310.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Zenitsu.', 17, 1, 3)
+(N'Dây Chuyền Trinh Sát ', CAST(330.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Inosuke.', 16, 1, 3)
+(N'Balo Logo Trinh Sát Màu Nâu', CAST(390.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Itachi Uchiha.', 5, 1, 1)
+(N'Balo Logo Trinh Sát Màu Đen', CAST(550.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Madara Uchiha.', 4, 1, 1)
+(N'Áo choàng đội trinh sát Loại 2', CAST(200.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Boruto Uzumaki.', 21, 1, 1)
 
 
 CREATE TABLE Users (
@@ -58,6 +60,7 @@ VALUES
 
 ('user01', 'Nguyen Van A', 'user@example.com', 'user123');
 
+Test:
 SELECT category_id, category_name FROM Categories
 SELECT * from Categories where category_id=1
 
