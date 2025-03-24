@@ -1,0 +1,40 @@
+CREATE TABLE product (
+    id INT IDENTITY(1,1) PRIMARY KEY,             -- Tự động tăng từ 1, mỗi lần +1
+    productname NVARCHAR(100) NOT NULL,           -- Tên sản phẩm (Unicode)
+    description NVARCHAR(MAX),                    -- Mô tả sản phẩm (dài thoải mái)
+    type NVARCHAR(50),                            -- Loại sản phẩm
+    quantity INT NOT NULL DEFAULT 0,              -- Số lượng, mặc định 0
+    price DECIMAL(18, 2) NOT NULL DEFAULT 0.00,   -- Giá, chính xác đến 2 số thập phân
+    status BIT NOT NULL DEFAULT 1,                -- Trạng thái, mặc định là 1 (hiển thị)
+    srcimg NVARCHAR(255)                          -- Link hình ảnh
+);
+
+CREATE TABLE [user] (                              -- Dùng [user] để tránh xung đột từ khóa
+    username VARCHAR(50) PRIMARY KEY,              -- Tên tài khoản
+    password VARCHAR(255) NOT NULL,                -- Mật khẩu (nên hash khi lưu)
+    fullname VARCHAR(100) NOT NULL,                -- Tên đầy đủ
+    email VARCHAR(255) NOT NULL UNIQUE,            -- Email duy nhất
+    role VARCHAR(2) NOT NULL DEFAULT 'US'          -- Vai trò: AD - Admin, US - User
+        CHECK (role IN ('AD', 'US'))               -- Ràng buộc giá trị
+);
+
+-- Thêm 1 admin
+INSERT INTO [user] (username, password, fullname, email, role)
+VALUES ('admin01', 'admin', 'Nguyen Van Admin', 'admin01@example.com', 'AD');
+
+-- Thêm 1 user
+INSERT INTO [user] (username, password, fullname, email, role)
+VALUES ('user01', 'user', 'Tran Thi User', 'user01@example.com', 'US');
+
+-- Thêm 5 sản phẩm
+INSERT INTO product (productname, description, type, quantity, price, status, srcimg)
+VALUES 
+(N'Laptop Dell XPS 13', N'Ultrabook cao cấp, thiết kế sang trọng, mỏng nhẹ.', N'Phụ kiện', 10, 25000000.00, 1, 'https://example.com/img/xps13.jpg'),
+
+(N'iPhone 15 Pro Max', N'Điện thoại thông minh cao cấp nhất của Apple.', N'Balo/Áo khoác', 20, 35000000.00, 1, 'https://example.com/img/iphone15promax.jpg'),
+
+(N'Bàn phím cơ Keychron K2', N'Bàn phím cơ bluetooth, hỗ trợ nhiều hệ điều hành.', N'Phụ kiện', 50, 1800000.00, 1, 'https://example.com/img/keychronk2.jpg'),
+
+(N'Tai nghe Sony WH-1000XM4', N'Tai nghe chống ồn chủ động tốt nhất thị trường.', N'Mô hình', 15, 7000000.00, 1, 'https://example.com/img/sonywh1000xm4.jpg'),
+
+(N'Chuột Logitech MX Master 3', N'Chuột không dây cao cấp, tối ưu cho lập trình và thiết kế.', N'Phụ kiện', 25, 2500000.00, 1, 'https://example.com/img/mxmaster3.jpg');

@@ -30,7 +30,7 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
         String sql = "SELECT * FROM Products WHERE active = 1";
         try {
             Connection conn = DBUtils.getConnection();
-            
+
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -81,9 +81,7 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
             ps.setString(1, "%" + name + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                ProductsDTO product = new ProductsDTO(
-                        
-                );
+                ProductsDTO product = new ProductsDTO();
                 products.add(product);
             }
         } catch (Exception e) {
@@ -104,9 +102,9 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
         return false;
     }
 
-    public List<ProductsDTO> getProductsByPage(List<ProductsDTO> list,int start, int end) {
+    public List<ProductsDTO> getProductsByPage(List<ProductsDTO> list, int start, int end) {
         ArrayList<ProductsDTO> arr = new ArrayList<>();
-        for(int i = start; i< end; i++){
+        for (int i = start; i < end; i++) {
             arr.add(list.get(i));
         }
         return arr;
@@ -125,4 +123,33 @@ public class ProductsDAO implements IDAO<ProductsDTO, String> {
         }
         return 0;
     }
+    // Trong ProductDAO.java
+
+    public List<ProductsDTO> searchByCategory(int categoryId) {
+        List<ProductsDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE active = 1 and category_id = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            ps.setInt(1, categoryId);
+            while (rs.next()) {
+                ProductsDTO p = new ProductsDTO();
+                p.setProduct_id(rs.getString("product_id"));
+                p.setProduct_name(rs.getString("product_name"));
+                p.setPrice(rs.getDouble("price"));
+                p.setDescription(rs.getString("description"));
+                p.setQuantity(rs.getInt("quantity"));
+                p.setActive(true);
+
+                list.add(p);
+            }
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }
