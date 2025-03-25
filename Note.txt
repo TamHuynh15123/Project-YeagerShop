@@ -1,70 +1,69 @@
-CREATE TABLE Products (
-    product_id INT IDENTITY(1,1) PRIMARY KEY,
-    product_name VARCHAR(255) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    description TEXT,
-    quantity INT DEFAULT 0,
-    active INT DEFAULT 1,
-    category_id INT,
-    FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+create database prjass_yeahger
+CREATE TABLE product (
+    id INT IDENTITY(1,1) PRIMARY KEY,             -- Tự động tăng từ 1, mỗi lần +1
+    productname NVARCHAR(100) NOT NULL,           -- Tên sản phẩm (Unicode)
+    description NVARCHAR(MAX),                    -- Mô tả sản phẩm (dài thoải mái)
+    type NVARCHAR(50),                            -- Loại sản phẩm
+    quantity INT NOT NULL DEFAULT 0,              -- Số lượng, mặc định 0
+    price DECIMAL(18, 2) NOT NULL DEFAULT 0.00,   -- Giá, chính xác đến 2 số thập phân
+    status BIT NOT NULL DEFAULT 1,
+	category_id INT,
+    FOREIGN KEY (category_id) REFERENCES Categories(category_id),
+    srcimg NVARCHAR(255) 
+	
 );
 CREATE TABLE Categories (
     category_id INT IDENTITY(1,1) PRIMARY KEY,
-    category_name VARCHAR(255) NOT NULL UNIQUE
+    category_name NVARCHAR(255) NOT NULL UNIQUE
 );
-INSERT [dbo].[Categories] ([category_id], [category_name]) VALUES (1, N'Balo/Áo khoác')
-INSERT [dbo].[Categories] ([category_id], [category_name]) VALUES (2, N'Mô hình')
-INSERT [dbo].[Categories] ([category_id], [category_name]) VALUES (3, N'Phụ kiện')
-
-INSERT INTO Products (product_name, price, description, quantity, active, category_id) 
-VALUES
-(N'Áo choàng đội trinh sát Loại 1', CAST(1500.00 AS Decimal(10, 2)), N'Áo choàng d?i trinh sát Ch?t li?u : V?i Polyester , lót bên trong là v?i dù.', 10, 1, 1)
-(N'Vòng tay Logo Trinh Sát', CAST(1200.00 AS Decimal(10, 2)), N'Ð?ng h? b? tú in logo trinh sát Ch?t li?u :vCeramics m? b?c.', 5, 1, 3)
-(N'Mô Hình Eren Yeager Thiếu niên 1', CAST(75.50 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 20, 1, 2)
-(N'Mô hình Mikasa Ackerman Loại 2', CAST(99.99 AS Decimal(10, 2)), N'Ch?t li?u: b?c', 15, 1, 2)
-(N'Mô hình Mikasa Ackerman Loại 1', CAST(300.00 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 8, 1, 2)
-(N'Mô Hình Levi Ackerman Loại 1', CAST(150.00 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 25, 1, 2)
-(N'Mô hình Reiner Braun Loại 2', CAST(129.99 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 12, 1, 2)
-(N'Mô Hình Reiner Braun Loại 1', CAST(2500.00 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 3, 1, 2)
-(N'Mô Hình Titan Đại Hình', CAST(399.99 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 7, 1, 2)
-(N'Mô Hình Annie Loại 1', CAST(89.99 AS Decimal(10, 2)), N'Ch?t li?u nh?a pvc, T? l? 1:12', 10, 1, 2)
-(N'Combo Mô Hình Hanji', CAST(250.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Naruto Uzumaki.', 15, 1, 2)
-(N'Combo Mô Hình Khác Loại', CAST(270.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Sasuke Uchiha.', 10, 1, 2)
-(N'Áo Hoddie Màu Loại 1 ', CAST(300.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Luffy trong One Piece.', 20, 1, 1)
-(N'Áo Hoddie Màu loại 2', CAST(320.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Zoro trong One Piece.', 12, 1, 1)
-(N'Mô Hình Levi Ackerman Loại 2', CAST(350.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Goku.', 18, 1, 2)
-(N'Mô Hình Levi Ackerman Loại 3', CAST(370.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Vegeta.', 8, 1, 2)
-(N'Mô Hình Titan Tiến Công', CAST(280.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Tanjiro Kamado.', 14, 1, 2)
-(N'Mô Hình Eren Yeager Thiếu niên 2', CAST(260.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Nezuko Kamado.', 22, 1, 2)
-(N'Mô Hình Eren Yeager Thiếu niên 3', CAST(400.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Gojo Satoru.', 9, 1, 2)
-(N'Mô Hình Eren Yeager Trưởng Thành', CAST(380.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Sukuna.', 11, 1, 2)
-(N'Mô Hình Armin ', CAST(500.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Levi.', 7, 1, 2)
-(N'Combo phụ kiện móc khóa', CAST(450.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Eren.', 6, 1, 3)
-(N'Combo phụ kiện dây chuyền', CAST(420.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Mikasa.', 13, 1, 3)
-(N'Note Book Attack on Titan', CAST(310.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Zenitsu.', 17, 1, 3)
-(N'Dây Chuyền Trinh Sát ', CAST(330.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Inosuke.', 16, 1, 3)
-(N'Balo Logo Trinh Sát Màu Nâu', CAST(390.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Itachi Uchiha.', 5, 1, 1)
-(N'Balo Logo Trinh Sát Màu Đen', CAST(550.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Madara Uchiha.', 4, 1, 1)
-(N'Áo choàng đội trinh sát Loại 2', CAST(200.00 AS Decimal(10, 2)), N'Mô hình nhân v?t Boruto Uzumaki.', 21, 1, 1)
-
-
-CREATE TABLE Users (
-    userid VARCHAR(50) PRIMARY KEY,
-    name NVARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    roleID VARCHAR(50) NOT NULL DEFAULT 'user'
+CREATE TABLE [user] (                              -- Dùng [user] để tránh xung đột từ khóa
+    username VARCHAR(50) PRIMARY KEY,              -- Tên tài khoản
+    password VARCHAR(255) NOT NULL,                -- Mật khẩu (nên hash khi lưu)
+    fullname VARCHAR(100) NOT NULL,                -- Tên đầy đủ
+    email VARCHAR(255) NOT NULL UNIQUE,            -- Email duy nhất
+    role VARCHAR(2) NOT NULL DEFAULT 'US'          -- Vai trò: AD - Admin, US - User
+        CHECK (role IN ('AD', 'US'))               -- Ràng buộc giá trị
 );
-INSERT INTO Users (userid, name, email, password)
-VALUES 
+INSERT INTO [user] (username, password, fullname, email, role)
+VALUES ('admin01', 'admin', 'Nguyen Van Admin', 'admin01@example.com', 'AD'),
+	   ('user01', 'user', 'Tran Thi User', 'user01@example.com', 'US');
 
-('user01', 'Nguyen Van A', 'user@example.com', 'user123');
+INSERT [dbo].[Categories] ([category_name])
+VALUES (N'Balo/Áo khoác'),
+       (N'Mô hình'),
+       (N'Phụ kiện');
 
-Test:
-SELECT category_id, category_name FROM Categories
-SELECT * from Categories where category_id=1
+INSERT INTO product (productname, description, quantity, price, status, category_id, srcimg) VALUES
+-- Balo & Áo khoác (category_id = 1)
+(N'Áo choàng đội trinh sát Loại 1', N'Áo choàng đội trinh sát cao cấp.', 10, 150.00, 1, 1, '1.jpg'),
+(N'Áo Hoodie Màu Loại 1', N'Áo hoodie với hình nhân vật.', 20, 300.00, 1, 1, '13.jpg'),
+(N'Áo Hoodie Màu Loại 2', N'Áo hoodie màu sắc khác.', 12, 320.00, 1, 1, '14.jpg'),
+(N'Balo Logo Trinh Sát Màu Nâu', N'Balo màu nâu có logo Trinh Sát.', 5, 550.00, 1, 1, '26.jpg'),
+(N'Balo Logo Trinh Sát Màu Đen', N'Balo màu đen có logo Trinh Sát.', 4, 550.00, 1, 1, '27.jpg'),
+(N'Áo choàng đội trinh sát Loại 2', N'Phiên bản thứ 2 của áo choàng trinh sát.', 21, 200.00, 1, 1, '28.jpg'),
 
-SELECT p.product_id, p.product_name, p.price, p.description, p.quantity, p.active, c.category_id, c.category_name
-FROM [dbo].[Products] p
-LEFT JOIN [dbo].[Categories] c
-ON c.category_id = p.category_id;
+-- Mô hình (category_id = 2)
+(N'Mô hình Eren Yeager Thiếu niên 1', N'Mô hình nhân vật Eren Yeager.', 15, 75.50, 1, 2, '3.jpg'),
+(N'Mô hình Mikasa Ackerman Loại 2', N'Mô hình nhân vật Mikasa Ackerman.', 8, 100.00, 1, 2, '4.jpg'),
+(N'Mô hình Mikasa Ackerman Loại 1', N'Mô hình Mikasa với chi tiết sắc nét.', 12, 130.00, 1, 2, '5.jpg'),
+(N'Mô hình Levi Ackerman Loại 1', N'Mô hình nhân vật Levi Ackerman.', 25, 150.00, 1, 2, '6.jpg'),
+(N'Mô hình Reiner Braun Loại 2', N'Mô hình Reiner Braun phiên bản 2.', 12, 129.99, 1, 2, '7.jpg'),
+(N'Mô hình Reiner Braun Loại 1', N'Mô hình Reiner Braun phiên bản 1.', 3, 250.00, 1, 2, '8.jpg'),
+(N'Mô hình Titan Đại Hình', N'Mô hình Titan kích thước lớn.', 7, 400.00, 1, 2, '9.jpg'),
+(N'Mô hình Annie Loại 1', N'Mô hình Annie Leonhart chi tiết cao.', 10, 85.00, 1, 2, '10.jpg'),
+(N'Combo Mô Hình Hanji', N'Combo mô hình Hanji Zoe.', 15, 250.00, 1, 2, '11.jpg'),
+(N'Combo Mô Hình Khác Loại', N'Combo các mô hình nhân vật khác.', 10, 270.00, 1, 2, '12.jpg'),
+(N'Mô hình Levi Ackerman Loại 2', N'Mô hình Levi với tư thế chiến đấu.', 18, 350.00, 1, 2, '15.jpg'),
+(N'Mô hình Levi Ackerman Loại 3', N'Mô hình Levi phiên bản đặc biệt.', 8, 370.00, 1, 2, '16.jpg'),
+(N'Mô hình Titan Tiến Công', N'Mô hình Titan của Eren Yeager.', 14, 280.00, 1, 2, '17.jpg'),
+(N'Mô hình Eren Yeager Thiếu niên 2', N'Mô hình Eren Yeager phiên bản 2.', 22, 260.00, 1, 2, '18.jpg'),
+(N'Mô hình Eren Yeager Thiếu niên 3', N'Mô hình Eren phiên bản 3.', 9, 400.00, 1, 2, '19.jpg'),
+(N'Mô hình Eren Yeager Trưởng Thành', N'Mô hình Eren Yeager trưởng thành.', 11, 380.00, 1, 2, '20.jpg'),
+(N'Mô hình Armin', N'Mô hình Armin Arlert.', 7, 500.00, 1, 2, '21.jpg'),
+
+-- Phụ kiện (category_id = 3)
+(N'Vòng tay Logo Trinh Sát', N'Vòng tay cao su có logo Trinh Sát.', 20, 12.00, 1, 3, '2.jpg'),
+(N'Combo phụ kiện móc khóa', N'Combo móc khóa hình nhân vật.', 6, 450.00, 1, 3, '22.jpg'),
+(N'Combo phụ kiện dây chuyền', N'Combo dây chuyền Attack on Titan.', 13, 420.00, 1, 3, '23.jpg'),
+(N'Note Book Attack on Titan', N'Sổ tay Attack on Titan.', 17, 310.00, 1, 3, '24.jpg'),
+(N'Dây Chuyền Trinh Sát', N'Dây chuyền có logo Trinh Sát.', 16, 330.00, 1, 3, '25.jpg');
