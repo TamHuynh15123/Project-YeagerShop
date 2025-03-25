@@ -7,6 +7,7 @@ package controller;
 
 import dao.productDAO;
 import dao.userDAO;
+import dto.CategoryDTO;
 import dto.productDTO;
 import dto.userDTO;
 import java.io.IOException;
@@ -40,51 +41,44 @@ public class MainController extends HttpServlet {
         String strUsername = request.getParameter("txtusername");
         String strPassword = request.getParameter("txtpassword");
         if (AuthUtils.isValidLogin(strUsername, strPassword)) {
-            url = HOME_PAGE;
+            url = processHome(request, response);
             userDTO user = AuthUtils.getUser(strUsername);
             request.getSession().setAttribute("user", user);
             // search
-            url = HOME_PAGE;
-            processSearch(request, response);
+            url = processHome(request, response);
+
         } else {
             request.setAttribute("message", "Incorrect UserID or Password");
-            url = LOGIN_PAGE;
+            request.getRequestDispatcher("login.jsp").forward(request, response);
         }
         return url;
     }
 
     private String processLogout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
         if (AuthUtils.isLoggedIn(session)) {
-            request.getSession().invalidate();
-            url = HOME_PAGE;
+            session.invalidate();
         }
-        return url;
+        return processHome(request, response);
     }
 
     private String processSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = LOGIN_PAGE;
-        HttpSession session = request.getSession();
 
-        url = HOME_PAGE;
         String searchTerm = request.getParameter("searchTerm");
         if (searchTerm == null) {
             searchTerm = "";
         }
-        if (AuthUtils.isAdmin(session)) {
-            List<productDTO> product = productDAO.searchByNameAD(searchTerm);
-            request.setAttribute("product", product);
-            request.setAttribute("searchTerm", searchTerm);
-        } else {
-            List<productDTO> product = productDAO.searchByName(searchTerm);
-            request.setAttribute("product", product);
-            request.setAttribute("searchTerm", searchTerm);
-        }
+        productDAO dao = new productDAO();
 
-        return url;
+        List<CategoryDTO> listC = dao.getAllCategory();
+        List<productDTO> product = dao.searchByName(searchTerm);
+        request.setAttribute("listP", product);
+        request.setAttribute("listC", listC);
+        request.setAttribute("searchTerm", searchTerm);
+
+        return HOME_PAGE;
     }
 
     private String processView(HttpServletRequest request, HttpServletResponse response)
@@ -136,7 +130,7 @@ public class MainController extends HttpServlet {
                     request.setAttribute("txtQuantity_error", "Quantity >=0.");
                 }
 
-                productDTO product = new productDTO(productname, description, type, quantity, price, status, image);
+                productDTO product = new productDTO(productname, description, quantity, price, status, image);
                 product.setId(id); // quan trọng!!!
 
                 if (!checkError) {
@@ -207,7 +201,7 @@ public class MainController extends HttpServlet {
                     request.setAttribute("txtQuantity_error", "Quantity >= 0.");
                 }
 
-                productDTO product = new productDTO(productname, description, type, quantity, price, status, image);
+                productDTO product = new productDTO(productname, description, quantity, price, status, image);
 
                 if (!checkError) {
                     boolean inserted = productDAO.add(product);
@@ -299,15 +293,32 @@ public class MainController extends HttpServlet {
         return url;
     }
 
+    private String processHome(HttpServletRequest request, HttpServletResponse response) {
+        try {
+
+            List<CategoryDTO> listC = productDAO.getAllCategory();
+            List<productDTO> listP = productDAO.readAll();
+
+            request.setAttribute("listC", listC);
+            request.setAttribute("listP", listP);
+
+            return "home.jsp"; // Chuyển đến trang chủ
+        } catch (Exception e) {
+            log("Error at processHome: " + e.toString());
+            return "error.jsp"; // Chuyển hướng nếu lỗi
+        }
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
         String url = LOGIN_PAGE;
+
         try {
             String action = request.getParameter("action");
             if (action == null) {
-                url = LOGIN_PAGE;
+                url = processHome(request, response);
             } else {
                 if (action.equals("login")) {
                     url = processLogin(request, response);
@@ -325,6 +336,8 @@ public class MainController extends HttpServlet {
                     url = processAdd(request, response);
                 } else if (action.equals("signup")) {
                     url = processSignUp(request, response);
+                } else if (action.equals("home")) {
+                    url = processHome(request, response);
                 }
             }
 //            your code here

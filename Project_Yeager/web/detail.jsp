@@ -15,6 +15,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <%@include file="header.jsp" %>
         <%            String searchTerm = request.getAttribute("searchTerm") + "";
             searchTerm = searchTerm.equals("null") ? "" : searchTerm;
         %>
@@ -23,36 +24,37 @@
                 productDTO b = (productDTO) request.getAttribute("product");
 
         %>
-        
+
         <table border="1">
             <thead>
                 <tr>                    
                     <th>productname</th>                                   
                     <th>price</th>
                     <th>img</th>                          
-                    <th>type</th>
+
                     <th>description</th>
                     <th>quantity</th>                                                           
                 </tr>
             </thead>
             <tbody>
-                
+
                 <tr>                    
                     <td><%=b.getProductname()%></td>                                      
                     <td><%=b.getPrice()%></td>
                     <td><%=b.getSrcimg()%></td>                   
-                    <td><%=b.getType()%></td>                                      
+
                     <td><%=b.getDescription()%></td>
                     <td><%=b.getQuantity()%></td>                    
-                                                         
+
                 </tr>
             </tbody>
 
             <a href="MainController?action=addtocart&id=<%=b.getId()%>&searchTerm=<%=searchTerm%>">
                 Add to Cart
             </a>
-            <%                
+            <%
                 }
             %>
+            <%@include file="footer.jsp" %>
     </body>
 </html>

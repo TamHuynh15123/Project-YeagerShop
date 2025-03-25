@@ -13,7 +13,7 @@ public class productDTO {
     private int id;
     private String productname;
     private String description;
-    private String type;
+    
     private int quantity;
     private float price;
     private boolean status;
@@ -22,21 +22,21 @@ public class productDTO {
     public productDTO() {
     }
 
-    public productDTO(String productname, String description, String type, int quantity, float price, boolean status, String srcimg) {
+    public productDTO(String productname, String description,  int quantity, float price, boolean status, String srcimg) {
         this.productname = productname;
         this.description = description;
-        this.type = type;
+        
         this.quantity = quantity;
         this.price = price;
         this.status = status;
         this.srcimg = srcimg;
     }
 
-    public productDTO(int id, String productname, String description, String type, int quantity, float price, boolean status, String srcimg) {
+    public productDTO(int id, String productname, String description,  int quantity, float price, boolean status, String srcimg) {
         this.id = id;
         this.productname = productname;
         this.description = description;
-        this.type = type;
+        
         this.quantity = quantity;
         this.price = price;
         this.status = status;
@@ -67,13 +67,6 @@ public class productDTO {
         this.description = description;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public int getQuantity() {
         return quantity;

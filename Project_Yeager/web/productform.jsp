@@ -7,7 +7,7 @@
     int id = (product != null) ? product.getId() : 0;
     String productname = (product != null) ? product.getProductname() : "";
     String description = (product != null) ? product.getDescription() : "";
-    String type = (product != null) ? product.getType() : "";
+    
     int quantity = (product != null) ? product.getQuantity() : 0;
     float price = (product != null) ? product.getPrice() : 0;
     String srcimg = (product != null) ? product.getSrcimg() : "";
@@ -30,12 +30,7 @@
             <label for="txtdescription">Description:</label><br/>
             <textarea id="txtdescription" name="txtdescription" rows="4" cols="50"><%= description%></textarea><br/><br/>
 
-            <label for="txttype">Type:</label><br/>
-            <select id="txttype" name="txttype" required>
-                <option value="Phụ kiện" <%= "Phụ kiện".equals(type) ? "selected" : ""%>>Phụ kiện</option>
-                <option value="Balo/Áo khoác" <%= "Balo/Áo khoác".equals(type) ? "selected" : ""%>>Balo/Áo khoác</option>
-                <option value="Mô hình" <%= "Mô hình".equals(type) ? "selected" : ""%>>Mô hình</option>
-            </select><br/><br/>
+            
 
             <label for="txtquantity">Quantity:</label><br/>
             <input type="number" id="txtquantity" name="txtquantity" value="<%= quantity%>" min="0" required/>
@@ -61,6 +56,6 @@
 
 
         <br/>
-        <a href="MainController?action=search">Back to Product List</a>
+        <a href="MainController?action=search">Trờ về trang chủ</a>
     </body>
 </html>
