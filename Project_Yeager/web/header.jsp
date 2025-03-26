@@ -3,6 +3,7 @@
     Created on : 25/03/2025, 8:39:15 AM
     Author     : HP
 --%>
+<%@page import="utils.AuthUtils"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -66,7 +67,12 @@
                             <div class="relative">
                                 <!-- Avatar Button -->
                                 <button id="avatarBtn" class="w-10 h-10 rounded-full overflow-hidden border-2 border-white focus:outline-none">
-                                    <img src="img logo/ava.jpg" alt="User Avatar" class="w-10 h-10 rounded-full cursor-pointer border border-gray-300 shadow-md">
+
+                                    <% if (AuthUtils.isAdmin(session)) { %>
+                                    <img src="img logo/ava.jpg" alt="Admin Avatar" class="w-10 h-10 rounded-full cursor-pointer border border-gray-300 shadow-md">
+                                    <%} else {%>
+                                    <img src="img logo/avauser.jpg" alt="User Avatar" class="w-10 h-10 rounded-full cursor-pointer border border-gray-300 shadow-md">
+                                    <% }%>
                                 </button>
 
                                 <!-- Dropdown Menu -->
