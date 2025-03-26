@@ -118,9 +118,12 @@
                     <label for="txttype" class="block text-sm font-medium">Type:</label>
                     <select id="txttype" name="txttype" required 
                             class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="Phụ kiện">Phụ kiện</option>
-                        <option value="Balo/Áo khoác">Balo/Áo khoác</option>
-                        <option value="Mô hình">Mô hình</option>
+                        <c:forEach items="${listC}" var="o">
+
+                        <a class="ml-2 text-white" href="category?cid=${o.cid}">
+                            ${o.cname}
+                        </a>
+                    </c:forEach>
                     </select>
                 </div>
 

@@ -87,7 +87,8 @@
                             Giá: ${o.price} đ
                         </p>
                         <div class="mt-auto flex justify-between space-x-2">
-                            <a href="MainController?action=view&product=${o.id}" class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                            <a href="detail.jsp?id=${o.id}" 
+                               class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Xem chi tiết
                             </a>
                             <button class="w-1/2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
@@ -100,7 +101,7 @@
             </div>
 
         </div>
-        
+
 
         <%@include file="footer.jsp" %>
 
