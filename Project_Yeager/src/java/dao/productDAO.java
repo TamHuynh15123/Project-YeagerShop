@@ -104,7 +104,7 @@ public class productDAO {
 
     public boolean update(productDTO entity) {
         String sql = "UPDATE product SET "
-                + " productname=?, description=?, type=?, quantity=?, price=?, status=?, srcimg=? "
+                + " productname=?, description=?, quantity=?, price=?, status=?,category_id = ?, srcimg=? "
                 + "  WHERE id=?";
         try {
             Connection conn = DBUtils.getConnection();
@@ -126,7 +126,7 @@ public class productDAO {
     }
 
     public boolean add(productDTO entity) {
-        String sql = "INSERT INTO product (productname, description, type, quantity, price, status, srcimg) "
+        String sql = "INSERT INTO product (productname, description, quantity, price, status, category_id, srcimg) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = DBUtils.getConnection();

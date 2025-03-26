@@ -77,20 +77,23 @@
                         <div class="relative">
                             <img alt="" class="w-full h-auto object-cover" src="${o.srcimg}" width="300"/>
                         </div>
-                        <h2 class="mt-4 text-lg font-bold">
+                        <h2 class="mt-4 text-lg font-bold text-gray-800">
                             ${o.productname}
                         </h2>
-                        <p class="text-gray-500">
-                            ${o.quantity}
+                        <p class="text-gray-600 text-sm">
+                            Kho: ${o.quantity} sản phẩm
                         </p>
-                        <p class="mt-2 text-xl font-bold">
-                            ${o.price}
+                        <p class="mt-2 text-xl font-bold text-red-800">
+                            Giá: ${o.price} đ
                         </p>
-                        <div class="mt-auto flex justify-between">
-                            <a href="MainController?action=view&product=${o.id}" class="bg-blue-500 text-white px-4 py-2 rounded">
-                                View Product
+                        <div class="mt-auto flex justify-between space-x-2">
+                            <a href="detail.jsp?id=${o.id}" 
+                               class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                                Xem chi tiết
                             </a>
-                            <button class="bg-green-500 text-white px-4 py-2 rounded">Add to Cart</button>
+                            <button class="w-1/2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
+                                Thêm vào giỏ
+                            </button>
                         </div>
                     </div>
                 </c:forEach>
@@ -98,6 +101,7 @@
             </div>
 
         </div>
+
 
         <%@include file="footer.jsp" %>
 
