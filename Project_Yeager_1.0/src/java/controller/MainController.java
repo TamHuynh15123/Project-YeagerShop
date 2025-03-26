@@ -142,6 +142,7 @@ public class MainController extends HttpServlet {
                     boolean updated = productDAO.update(product);
                     System.out.println("Update status: " + updated);
                     url = HOME_PAGE;
+                    request.setAttribute("successMessage", "Update Successfully!");
                     processSearch(request, response);
                 } else {
                     request.setAttribute("product", product);
@@ -189,68 +190,93 @@ public class MainController extends HttpServlet {
         String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
 
-        if (AuthUtils.isAdmin(session)) { // Kiểm tra quyền admin
+        if (!AuthUtils.isAdmin(session)) { // Chỉ cho phép admin truy cập
+            request.setAttribute("errorMessage", "Bạn không có quyền truy cập vào trang này.");
+            return LOGIN_PAGE;
+        }
+
+        try {
+            boolean checkError = false;
+
+            String productname = request.getParameter("txtproductname");
+            String description = request.getParameter("txtdescription");
+            int quantity = 0;
+            float price = 0;
+            int category_id = 0;
+            String image = request.getParameter("txtimage");
+            boolean status = Boolean.parseBoolean(request.getParameter("txtstatus"));
+
+            // Kiểm tra tên sản phẩm không được để trống
+            if (productname == null || productname.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("txtProductName_error", "Product name is required.");
+            }
+
+            // Kiểm tra mô tả sản phẩm không được để trống
+            if (description == null || description.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("txtDescription_error", "Description is required.");
+            }
+
+            // Kiểm tra số lượng
             try {
-                boolean checkError = false;
-
-                String productname = request.getParameter("txtproductname");
-                String description = request.getParameter("txtdescription");
-                int quantity = 0;
-                float price = 0;
-                int category_id = 0;
-                String image = request.getParameter("txtimage");
-                boolean status = Boolean.parseBoolean(request.getParameter("txtstatus"));
-
-                // Kiểm tra số nguyên và float
-                try {
-                    quantity = Integer.parseInt(request.getParameter("txtquantity"));
-                    if (quantity < 0) {
-                        checkError = true;
-                        request.setAttribute("txtQuantity_error", "Quantity must be >= 0.");
-                    }
-                } catch (NumberFormatException e) {
+                quantity = Integer.parseInt(request.getParameter("txtquantity"));
+                if (quantity < 0) {
                     checkError = true;
-                    request.setAttribute("txtQuantity_error", "Invalid quantity format.");
+                    request.setAttribute("txtQuantity_error", "Quantity must be >= 0.");
                 }
+            } catch (NumberFormatException e) {
+                checkError = true;
+                request.setAttribute("txtQuantity_error", "Invalid quantity format.");
+            }
 
-                try {
-                    price = Float.parseFloat(request.getParameter("txtprice"));
-                    if (price < 0) {
-                        checkError = true;
-                        request.setAttribute("txtPrice_error", "Price must be >= 0.");
-                    }
-                } catch (NumberFormatException e) {
+            // Kiểm tra giá
+            try {
+                price = Float.parseFloat(request.getParameter("txtprice"));
+                if (price < 0) {
                     checkError = true;
-                    request.setAttribute("txtPrice_error", "Invalid price format.");
+                    request.setAttribute("txtPrice_error", "Price must be >= 0.");
                 }
+            } catch (NumberFormatException e) {
+                checkError = true;
+                request.setAttribute("txtPrice_error", "Invalid price format.");
+            }
 
-                try {
-                    category_id = Integer.parseInt(request.getParameter("txtcategory"));
-                } catch (NumberFormatException e) {
-                    checkError = true;
-                    request.setAttribute("txtCategory_error", "Invalid category ID.");
-                }
+            // Kiểm tra danh mục
+            try {
+                category_id = Integer.parseInt(request.getParameter("txtcategory"));
+            } catch (NumberFormatException e) {
+                checkError = true;
+                request.setAttribute("txtCategory_error", "Invalid category ID.");
+            }
 
-                productDTO product = new productDTO(productname, description, category_id, quantity, price, status, image);
+            // Kiểm tra hình ảnh
+            if (image == null || image.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("txtImage_error", "Product image is required.");
+            }
 
-                if (!checkError) {
-                    boolean inserted = productDAO.add(product);
-                    if (inserted) {
-                        url = HOME_PAGE;
-                        processSearch(request, response); // Load lại danh sách sản phẩm
-                    } else {
-                        url = ADD_PAGE;
-                        request.setAttribute("errorMessage", "Insert failed.");
-                    }
+            // Tạo đối tượng productDTO với dữ liệu nhập vào
+            productDTO product = new productDTO(productname, description, category_id, quantity, price, status, image);
+
+            if (!checkError) {
+                boolean inserted = productDAO.add(product);
+                if (inserted) {
+                    url = HOME_PAGE;
+                    request.setAttribute("successMessage", "Add Successfully!");
+                    processSearch(request, response); // Load lại danh sách sản phẩm
                 } else {
-                    request.setAttribute("product", product);
                     url = ADD_PAGE;
+                    request.setAttribute("errorMessage", "Insert failed.");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                request.setAttribute("errorMessage", "An error occurred while adding the product.");
+            } else {
+                request.setAttribute("product", product); // Giữ lại dữ liệu nhập vào
                 url = ADD_PAGE;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An error occurred while adding the product.");
+            url = ADD_PAGE;
         }
         return url;
     }

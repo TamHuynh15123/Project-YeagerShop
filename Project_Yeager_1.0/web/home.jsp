@@ -34,6 +34,12 @@
 
         <div class="bg-gray-700 p-4">
             <div class="container mx-auto flex justify-between items-center">
+                <c:if test="${not empty sessionScope.successMessage}">
+                    <div class="alert alert-success">
+                        ${sessionScope.successMessage}
+                    </div>
+                    <c:remove var="successMessage" scope="session"/>
+                </c:if>
                 <div class="text-white">
                     <span class="font-bold">
                         Categories:
@@ -91,18 +97,18 @@
                                class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Xem chi tiết
                             </a>
-                            <% if(AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session))  {%>
+                            <% if (AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session)) {%>
                             <a href="MainController?action=addcart&pid=${o.id}" 
                                class="w-1/2 text-center bg-red-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Thêm vào giỏ
                             </a>
-                            <%}else if(AuthUtils.isAdmin(session)){%>
+                            <%} else if (AuthUtils.isAdmin(session)) {%>
                             <a href="MainController?action=edit&pid=${o.id}" 
                                class="w-1/2 text-center bg-yellow-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Cập Nhật
                             </a>
-                            
-                                    <%}%>
+
+                            <%}%>
                         </div>
                     </div>
                 </c:forEach>

@@ -99,84 +99,51 @@
 
             <form action="MainController" method="post" class="space-y-4">
                 <input type="hidden" name="action" value="add"/>
-                <!-- Product Name -->
+
                 <div>
                     <label for="txtproductname" class="block text-sm font-medium">Product Name:</label>
                     <input type="text" id="txtproductname" name="txtproductname" required 
                            class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <c:if test="${not empty requestScope.txtproductname_error}">
+                        <div class="error-message text-red-500">${requestScope.txtproductname_error}</div>
+                    </c:if>
                 </div>
 
-                <!-- Description -->
                 <div>
                     <label for="txtdescription" class="block text-sm font-medium">Description:</label>
                     <textarea id="txtdescription" name="txtdescription" rows="3"
                               class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    <c:if test="${not empty requestScope.txtdescription_error}">
+                        <div class="error-message text-red-500">${requestScope.txtdescription_error}</div>
+                    </c:if>
                 </div>
 
-                <!-- Type -->
-                <div>
-                    <label for="txtcategory" class="block text-sm font-medium">Type:</label>
-                    <select id="txttype" name="txtcategory" required 
-                            class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="1" selected>Balo/Áo khoác</option>
-                        <option value="2">Mô hình</option>
-                        <option value="3">Phụ kiện</option>
-                    </select>
-                </div>
-
-                <!-- Quantity & Price (Chia thành 2 cột) -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="txtquantity" class="block text-sm font-medium">Quantity:</label>
                         <input type="number" id="txtquantity" name="txtquantity" min="0" required 
                                class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        <c:if test="${not empty requestScope.txtquantity_error}">
+                            <div class="error-message text-red-500">${requestScope.txtquantity_error}</div>
+                        </c:if>
                     </div>
                     <div>
                         <label for="txtprice" class="block text-sm font-medium">Price:</label>
                         <input type="number" id="txtprice" name="txtprice" step="0.01" required 
                                class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    </div>
-                </div>
-
-                <!-- Image URL -->
-                <div class="form-field image-upload-section">
-                    <label for="txtimage">Product Image</label>
-                    <input type="hidden" id="txtImage" name="txtimage" value="${product.srcimg}">
-                    <div class="upload-container">
-                        <div class="file-upload-wrapper">
-                            <button type="button" class="file-upload-button">Choose Image</button>
-                            <input type="file" id="imageUpload" class="file-upload-input" accept="image/*">
-                        </div>
-                        <div class="file-info" id="fileInfo">No file selected</div>
-                        <div class="progress-bar-container" id="progressContainer">
-                            <div class="progress-bar" id="progressBar"></div>
-                        </div>
-                    </div>
-                    <c:if test="${not empty requestScope.txtImage_error}">
-                        <div class="error-message">${requestScope.txtImage_error}</div>
-                    </c:if>
-                    <div class="image-preview" id="imagePreview">
-                        <c:if test="${not empty product.srcimg}">
-                            <img src="${product.srcimg}" alt="Product Preview">
+                        <c:if test="${not empty requestScope.txtprice_error}">
+                            <div class="error-message text-red-500">${requestScope.txtprice_error}</div>
                         </c:if>
                     </div>
-
                 </div>
 
-                <!-- Status -->
                 <div>
-                    <label for="txtstatus" class="block text-sm font-medium">Status:</label>
-                    <select id="txtstatus" name="txtstatus" 
-                            class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option value="true">Active</option>
-                        <option value="false">Inactive</option>
-                    </select>
+                    <label for="txtimage">Product Image</label>
+                    <input type="hidden" id="txtImage" name="txtimage" value="${product.srcimg}">
+                    <c:if test="${not empty requestScope.txtImage_error}">
+                        <div class="error-message text-red-500">${requestScope.txtImage_error}</div>
+                    </c:if>
                 </div>
-
-                <!-- Hidden Input -->
-
-
-                <!-- Submit Button -->
 
                 <div class="text-center">
                     <button type="submit" 
