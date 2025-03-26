@@ -99,31 +99,6 @@ public class productDAO {
         return null;
     }
 
-    public boolean update(productDTO entity) {
-        String sql = "UPDATE product SET "
-                + " productname=?, description=?, quantity=?, price=?, status=?, srcimg=? "
-                + " WHERE id=?";
-        try {
-            Connection conn = DBUtils.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setString(1, entity.getProductname());
-            ps.setString(2, entity.getDescription());
-            ps.setInt(3, entity.getQuantity());
-            ps.setFloat(4, entity.getPrice());
-            ps.setBoolean(5, entity.isStatus());
-
-            ps.setString(6, entity.getSrcimg());
-            ps.setInt(7, entity.getId());
-
-            int i = ps.executeUpdate();
-            return i > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public boolean add(productDTO entity) {
         String sql = "INSERT INTO product (productname, description, quantity, price, status, category_id, srcimg) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -143,6 +118,31 @@ public class productDAO {
             return i > 0;
         } catch (Exception e) {
             e.printStackTrace(); // In lỗi ra console
+        }
+        return false;
+    }
+
+    public boolean update(productDTO entity) {
+        String sql = "UPDATE product SET "
+                + " productname= ?, description=?, quantity=?, price=?, status=?, srcimg=? "
+                + " WHERE id=?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, entity.getProductname());
+            ps.setString(2, entity.getDescription());
+            ps.setInt(3, entity.getQuantity());
+            ps.setFloat(4, entity.getPrice());
+            ps.setBoolean(5, entity.isStatus());
+
+            ps.setString(6, entity.getSrcimg());
+            ps.setInt(7, entity.getId());
+
+            int i = ps.executeUpdate();
+            return i > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

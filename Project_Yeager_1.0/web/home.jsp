@@ -92,9 +92,10 @@
                                 Xem chi tiết
                             </a>
                             <% if(AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session))  {%>
-                            <button class="w-1/2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
+                            <a href="MainController?action=addcart&pid=${o.id}" 
+                               class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Thêm vào giỏ
-                            </button>
+                            </a>
                             <%}else if(AuthUtils.isAdmin(session)){%>
                             <a href="MainController?action=edit&pid=${o.id}" 
                                class="w-1/2 text-center bg-yellow-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">

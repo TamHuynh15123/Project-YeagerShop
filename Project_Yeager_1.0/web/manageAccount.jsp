@@ -29,7 +29,7 @@
         <title>Quản lý tài khoản</title>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    
+
     <body class="bg-gray-900 text-white">
         <header class="bg-gray-800 text-white">
             <div class="container mx-auto flex justify-between items-center py-4 px-6">
@@ -80,12 +80,16 @@
                         <div class="relative">
                             <!-- Avatar Button -->
                             <button id="avatarBtn" class="w-10 h-10 rounded-full overflow-hidden border-2 border-white focus:outline-none">
-                                <img src="img logo/ava.jpg" alt="User Avatar" class="w-10 h-10 rounded-full cursor-pointer border border-gray-300 shadow-md">
+                                <% if (AuthUtils.isAdmin(session)) { %>
+                                <img src="img logo/ava.jpg" alt="Admin Avatar" class="w-10 h-10 rounded-full cursor-pointer border border-gray-300 shadow-md">
+                                <%} else {%>
+                                <img src="img logo/avauser.jpg" alt="User Avatar" class="w-10 h-10 rounded-full cursor-pointer border border-gray-300 shadow-md">
+                                <% }%>
                             </button>
 
                             <!-- Dropdown Menu -->
                             <div id="avatarDropdown" class="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md hidden">
-                                
+
                                 <a href="MainController?action=logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">
                                     Đăng xuất
                                 </a>

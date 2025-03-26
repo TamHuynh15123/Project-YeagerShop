@@ -113,6 +113,7 @@ public class MainController extends HttpServlet {
 
     private String processUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
         if (AuthUtils.isAdmin(session)) {
@@ -347,7 +348,7 @@ public class MainController extends HttpServlet {
                 session.setAttribute("cart", cart);
             }
 
-            int id = Integer.parseInt(request.getParameter("id"));
+            int id = Integer.parseInt(request.getParameter("pid"));
             String productName = request.getParameter("productName");
             int quantity = Integer.parseInt(request.getParameter("quantity"));
             float price = Float.parseFloat(request.getParameter("price"));
@@ -412,6 +413,24 @@ public class MainController extends HttpServlet {
         }
     }
 
+    private String processViewCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+
+            if (cart == null || cart.isEmpty()) {
+                request.setAttribute("message", "Giỏ hàng của bạn đang trống.");
+            }
+
+            return "cart.jsp"; // Chuyển hướng đến trang giỏ hàng
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi hiển thị giỏ hàng.");
+            return "home.jsp";
+        }
+    }
+
     private String processManageAccount(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -464,8 +483,12 @@ public class MainController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
 
-        response.setContentType("text/html;charset=UTF-8");
+        // Đặt encoding cho response để hiển thị đúng
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
         String url = LOGIN_PAGE;
 
         try {
@@ -493,6 +516,14 @@ public class MainController extends HttpServlet {
                     url = processHome(request, response);
                 } else if (action.equals("manage")) {
                     url = processManageAccount(request, response);
+                } else if (action.equals("addcart")) {
+                    url = processAddToCart(request, response);
+                } else if (action.equals("remove")) {
+                    url = processRemoveFromCart(request, response);
+                } else if (action.equals("checkout")) {
+                    url = processCheckout(request, response);
+                } else if (action.equals("viewcart")) {
+                    url = processViewCart(request, response);
                 }
             }
 //            your code here
@@ -517,6 +548,11 @@ public class MainController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        // Đặt encoding cho response để hiển thị đúng
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
     }
 
     /**
@@ -531,6 +567,11 @@ public class MainController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        // Đặt encoding cho response để hiển thị đúng
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
     }
 
     /**

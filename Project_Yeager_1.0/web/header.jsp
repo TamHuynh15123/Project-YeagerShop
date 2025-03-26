@@ -85,7 +85,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <a href="#" class="hover:text-gray-400">
+                            <a href="MainController?action=viewcart" class="hover:text-gray-400">
                                 <i class="fas fa-shopping-cart"></i> Giỏ hàng
                             </a>
                         </c:when>
