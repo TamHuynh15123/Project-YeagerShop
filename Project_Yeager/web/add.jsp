@@ -98,6 +98,7 @@
             <h2 class="text-2xl font-semibold mb-4 text-center">Add New Product</h2>
 
             <form action="MainController" method="post" class="space-y-4">
+                <input type="hidden" name="action" value="add"/>
                 <!-- Product Name -->
                 <div>
                     <label for="txtproductname" class="block text-sm font-medium">Product Name:</label>
@@ -138,10 +139,28 @@
                 </div>
 
                 <!-- Image URL -->
-                <div>
-                    <label for="txtimage" class="block text-sm font-medium">Image URL:</label>
-                    <input type="text" id="txtimage" name="txtimage"
-                           class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <div class="form-field image-upload-section">
+                        <label for="txtimage">Product Image</label>
+                        <input type="hidden" id="txtImage" name="txtimage" value="${product.srcimg}">
+                        <div class="upload-container">
+                            <div class="file-upload-wrapper">
+                                <button type="button" class="file-upload-button">Choose Image</button>
+                                <input type="file" id="imageUpload" class="file-upload-input" accept="image/*">
+                            </div>
+                            <div class="file-info" id="fileInfo">No file selected</div>
+                            <div class="progress-bar-container" id="progressContainer">
+                                <div class="progress-bar" id="progressBar"></div>
+                            </div>
+                        </div>
+                        <c:if test="${not empty requestScope.txtImage_error}">
+                            <div class="error-message">${requestScope.txtImage_error}</div>
+                        </c:if>
+                        <div class="image-preview" id="imagePreview">
+                            <c:if test="${not empty product.srcimg}">
+                                <img src="${product.srcimg}" alt="Product Preview">
+                            </c:if>
+                        </div>
+                    
                 </div>
 
                 <!-- Status -->
@@ -155,9 +174,10 @@
                 </div>
 
                 <!-- Hidden Input -->
-                <input type="hidden" name="action" value="add"/>
+                
 
                 <!-- Submit Button -->
+                
                 <div class="text-center">
                     <button type="submit" 
                             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-200">
@@ -174,6 +194,87 @@
         </div>
 
         <%@include file="footer.jsp" %>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const txtImage = document.getElementById('txtImage');
+                const imagePreview = document.getElementById('imagePreview');
+
+                txtImage.addEventListener('input', function () {
+                    const imageUrl = this.value.trim();
+                    if (imageUrl) {
+                        if (imageUrl.startsWith('data:image') || imageUrl.startsWith('http')) {
+                            imagePreview.innerHTML = `<img src="${imageUrl}" alt="Preview" onerror="this.src='assets/images/placeholder.png'; this.alt='Image not available';">`;
+                        } else {
+                            imagePreview.innerHTML = '<p>Invalid image URL</p>';
+                        }
+                    } else {
+                        imagePreview.innerHTML = '';
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+                $('#imageUpload').change(function () {
+                    const file = this.files[0];
+                    if (file) {
+                        if (!file.type.match('image.*')) {
+                            alert('Please select an image file');
+                            this.value = '';
+                            $('#fileInfo').text('No file selected');
+                            return;
+                        }
+
+                        if (file.size > 1024 * 1024) { // Giới hạn 1MB
+                            alert('File size must be under 1MB');
+                            this.value = '';
+                            $('#fileInfo').text('No file selected');
+                            return;
+                        }
+
+                        const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+                        $('#fileInfo').text(file.name + ' (' + fileSize + ')');
+                        $('#progressContainer').show();
+
+                        const reader = new FileReader();
+                        reader.onprogress = function (event) {
+                            if (event.lengthComputable) {
+                                const percent = Math.round((event.loaded / event.total) * 100);
+                                $('#progressBar').css('width', percent + '%');
+                            }
+                        };
+
+                        reader.onload = function (e) {
+                            $('#progressBar').css('width', '100%');
+                            const base64String = e.target.result;
+                            $('#txtImage').val(base64String);
+                            $('#imagePreview').html('<img src="' + base64String + '" alt="Preview">');
+                            setTimeout(() => {
+                                $('#progressContainer').hide();
+                                $('#progressBar').css('width', '0%');
+                            }, 1000);
+                        };
+
+                        reader.onerror = function () {
+                            alert('Error reading file');
+                            $('#progressContainer').hide();
+                            $('#progressBar').css('width', '0%');
+                            $('#fileInfo').text('No file selected');
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                $('#resetBtn').click(function () {
+                    $('#imagePreview').empty();
+                    $('#fileInfo').text('No file selected');
+                    $('#txtImage').val('');
+                    $('#progressContainer').hide();
+                    $('#progressBar').css('width', '0%');
+                });
+            });
+        </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const avatarBtn = document.getElementById("avatarBtn");

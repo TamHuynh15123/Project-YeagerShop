@@ -34,6 +34,7 @@ public class MainController extends HttpServlet {
     private static final String HOME_PAGE = "home.jsp";
     private static final String DETAIL_PAGE = "detail.jsp";
     private static final String FORM_PAGE = "productform.jsp";
+    private static final String ADD_PAGE = "add.jsp";
 
     private String processLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -211,12 +212,12 @@ public class MainController extends HttpServlet {
                         url = HOME_PAGE;
                         processSearch(request, response); // Load lại danh sách sản phẩm
                     } else {
-                        url = FORM_PAGE; // Có thể là addForm.jsp
+                        url = ADD_PAGE; // Có thể là addForm.jsp
                         request.setAttribute("errorMessage", "Insert failed.");
                     }
                 } else {
                     request.setAttribute("product", product);
-                    url = FORM_PAGE;
+                    url = ADD_PAGE;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -309,6 +310,56 @@ public class MainController extends HttpServlet {
         }
     }
 
+    private String processManageAccount(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            userDTO user = (userDTO) session.getAttribute("user");
+
+            if (user == null) {
+                response.sendRedirect("login.jsp");
+                return "redirect";
+            }
+
+            String fullName = request.getParameter("fullName");
+            String newPassword = request.getParameter("newPassword");
+            String confirmPassword = request.getParameter("confirmPassword");
+            String currentPassword = request.getParameter("currentPassword");
+
+            userDAO dao = new userDAO();
+            userDTO currentUser = dao.readByID(user.getUsername());
+
+            if (currentUser == null || !PasswordUtils.checkPassword(currentPassword, currentUser.getPassword())) {
+                request.setAttribute("error", "Mật khẩu hiện tại không đúng.");
+                return "manageAccount.jsp";
+            }
+
+            if (!newPassword.isEmpty() && !newPassword.equals(confirmPassword)) {
+                request.setAttribute("error", "Mật khẩu mới không khớp.");
+                return "manageAccount.jsp";
+            }
+
+            if (!newPassword.isEmpty()) {
+                currentUser.setPassword(PasswordUtils.hashPassword(newPassword));
+            }
+
+            currentUser.setFullname(fullName);
+
+            if (dao.update(currentUser)) {
+                request.setAttribute("message", "Cập nhật thành công!");
+                session.setAttribute("user", currentUser);
+            } else {
+                request.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại.");
+            }
+
+            return "manageAccount.jsp";
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi hệ thống, vui lòng thử lại sau.");
+            return "manageAccount.jsp";
+        }
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -338,6 +389,8 @@ public class MainController extends HttpServlet {
                     url = processSignUp(request, response);
                 } else if (action.equals("home")) {
                     url = processHome(request, response);
+                } else if (action.equals("manage")) {
+                    url = processManageAccount(request, response);
                 }
             }
 //            your code here
