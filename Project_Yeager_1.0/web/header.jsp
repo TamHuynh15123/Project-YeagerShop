@@ -85,11 +85,8 @@
                                     </a>
                                 </div>
                             </div>
-                            <a href="MainController?action=viewcart" class="relative hover:text-gray-400">
+                            <a href="MainController?action=viewcart" class="hover:text-gray-400">
                                 <i class="fas fa-shopping-cart"></i> Giỏ hàng
-                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    ${sessionScope.cartSize != null ? sessionScope.cartSize : 0}
-                                </span>
                             </a>
                         </c:when>
 
