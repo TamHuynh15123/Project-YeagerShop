@@ -15,7 +15,7 @@
         response.sendRedirect("login.jsp");
         return;
     }
-
+    
     userDTO user = (userDTO) session.getAttribute("user");
     String error = (String) request.getAttribute("error");
     String message = (String) request.getAttribute("message");
@@ -107,6 +107,7 @@
             </div>
         </header>
     <body class="bg-gray-100">
+        <%if (AuthUtils.isLoggedIn(session)) {%>
         <div class="max-w-lg mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
             <h2 class="text-xl font-bold mb-4">Quản lý tài khoản</h2>
 
@@ -162,17 +163,20 @@
                 </a>
             </div>
         </div>
+        <%} else {%>
+        <h1 style="color: red">You do must login to do that</h1>
+        <%}%>
         <%@include file="footer.jsp" %>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const avatarBtn = document.getElementById("avatarBtn");
                 const avatarDropdown = document.getElementById("avatarDropdown");
-
+                
                 avatarBtn.addEventListener("click", function (event) {
                     event.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài
                     avatarDropdown.classList.toggle("hidden"); // Bật/tắt dropdown
                 });
-
+                
                 // Ẩn dropdown khi click ra ngoài
                 document.addEventListener("click", function (event) {
                     if (!avatarBtn.contains(event.target) && !avatarDropdown.contains(event.target)) {

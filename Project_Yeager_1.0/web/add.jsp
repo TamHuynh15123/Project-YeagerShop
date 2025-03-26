@@ -4,6 +4,7 @@
     Author     : dangk
 --%>
 
+<%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -19,6 +20,8 @@
                     <img src="img logo/logo2.png" alt="YeagerShop logo" width="60" height="60"/>
                     <span class="ml-3 text-4xl font-bold">YeagerShop</span>
                 </div>
+
+
                 <nav class="space-x-4">
                     <a href="MainController?action=home" class="hover:text-gray-400">Trang chủ</a>
                     <!-- Sản phẩm -->
@@ -93,7 +96,7 @@
 
             </div>
         </header>
-
+        <%if (AuthUtils.isAdmin(session)) {%>
         <div class="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
             <h2 class="text-2xl font-semibold mb-4 text-center">Add New Product</h2>
 
@@ -192,7 +195,9 @@
                 </a>
             </div>
         </div>
-
+        <%} else {%>
+        <h1 style="color: red">You do not have permission to do that</h1>
+        <%}%>
         <%@include file="footer.jsp" %>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
