@@ -16,6 +16,9 @@
     </head>
     <body>
         <%@include file="header.jsp" %>
+        
+            
+        
         <%            String searchTerm = request.getAttribute("searchTerm") + "";
             searchTerm = searchTerm.equals("null") ? "" : searchTerm;
         %>
@@ -55,6 +58,7 @@
             <%
                 }
             %>
+            
             <%@include file="footer.jsp" %>
     </body>
 </html>

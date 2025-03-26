@@ -59,7 +59,7 @@
 
             <input type="hidden" name="userId" value="<%= user.getUsername() %>">
 
-            <button type="submit" name="action" value="update" class="w-full bg-blue-500 text-white py-2 rounded">
+            <button type="submit" name="action" value="manage" class="w-full bg-blue-500 text-white py-2 rounded">
                 Cập nhật
             </button>
         </form>

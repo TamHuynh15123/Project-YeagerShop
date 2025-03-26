@@ -87,14 +87,16 @@
                             ${o.price}
                         </p>
                         <div class="mt-auto flex justify-between">
-                            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="window.location.href = 'detail.jsp'">View Product</button>
+                            <a href="MainController?action=view&product=${o.id}" class="bg-blue-500 text-white px-4 py-2 rounded">
+                                View Product
+                            </a>
                             <button class="bg-green-500 text-white px-4 py-2 rounded">Add to Cart</button>
                         </div>
                     </div>
                 </c:forEach>
 
             </div>
-            
+
         </div>
 
         <%@include file="footer.jsp" %>
