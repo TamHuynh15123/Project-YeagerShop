@@ -128,32 +128,32 @@
             <form action="MainController" method="post">
                 <div class="mb-4">
                     <label class="block text-gray-700">Họ và Tên:</label>
-                    <input type="text" name="fullName" value="<%= user.getFullname()%>" class="w-full px-3 py-2 border rounded">
+                    <input type="text" name="fullName" value="<%= user.getFullname()%>" class="bg-gray-900 w-full px-3 py-2 border rounded">
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">Email:</label>
-                    <input type="email" name="email" value="<%= user.getEmail()%>" class="w-full px-3 py-2 border rounded" readonly>
+                    <input type="email" name="email" value="<%= user.getEmail()%>" class="bg-gray-900 w-full px-3 py-2 border rounded" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">Mật khẩu mới:</label>
-                    <input type="password" name="newPassword" class="w-full px-3 py-2 border rounded">
+                    <input type="password" name="newPassword" class="bg-gray-900 w-full px-3 py-2 border rounded">
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">Xác nhận mật khẩu:</label>
-                    <input type="password" name="confirmPassword" class="w-full px-3 py-2 border rounded">
+                    <input type="password" name="confirmPassword" class="bg-gray-900 w-full px-3 py-2 border rounded">
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700">Nhập mật khẩu hiện tại để xác nhận:</label>
-                    <input type="password" name="currentPassword" required class="w-full px-3 py-2 border rounded">
+                    <input type="password" name="currentPassword" required class="bg-gray-900 w-full px-3 py-2 border rounded">
                 </div>
 
                 <input type="hidden" name="userId" value="<%= user.getUsername()%>">
 
-                <button type="submit" name="action" value="manage" class="w-full bg-blue-500 text-white py-2 rounded">
+                <button type="submit" name="action" value="manage" class="bg-gray-900 w-full bg-blue-500 text-white py-2 rounded">
                     Cập nhật
                 </button>
             </form>
@@ -163,6 +163,7 @@
                 </a>
             </div>
         </div>
+    </body>
         <%} else {%>
         <h1 style="color: red">You do must login to do that</h1>
         <%}%>

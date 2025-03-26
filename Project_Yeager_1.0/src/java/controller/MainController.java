@@ -159,7 +159,8 @@ public class MainController extends HttpServlet {
     private String processEdit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String url = HOME_PAGE; // Hoặc một trang mặc định khác
+        String url = HOME_PAGE;
+        processSearch(request, response);// Hoặc một trang mặc định khác
         HttpSession session = request.getSession();
 
         if (AuthUtils.isAdmin(session)) { // Kiểm tra có phải admin hay không
