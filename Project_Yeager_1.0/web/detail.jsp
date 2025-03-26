@@ -1,64 +1,46 @@
-<%-- 
-    Document   : detail
-    Created on : Mar 24, 2025, 6:54:38 PM
-    Author     : dangk
---%>
-
 <%@page import="utils.AuthUtils"%>
 <%@page import="dto.productDTO"%>
-<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Chi tiết sản phẩm</title>
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body>
+    <body class="bg-gray-100">
         <%@include file="header.jsp" %>
-        
-            
-        
-        <%            String searchTerm = request.getAttribute("searchTerm") + "";
-            searchTerm = searchTerm.equals("null") ? "" : searchTerm;
-        %>
-        <%
-            if (request.getAttribute("product") != null) {
-                productDTO b = (productDTO) request.getAttribute("product");
 
-        %>
+        <div class="container mx-auto py-8">
+            <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+                <% if (request.getAttribute("product") != null) {
+                        productDTO b = (productDTO) request.getAttribute("product");
+                %>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <img src="<%=b.getSrcimg()%>" alt="<%=b.getProductname()%>" class="w-full h-auto rounded-lg shadow">
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800"><%=b.getProductname()%></h2>
+                        <p class="text-gray-600 mt-2">Mô tả: <%=b.getDescription()%></p>
+                        <p class="mt-4 text-xl font-semibold text-red-600">Giá: <%=b.getPrice()%> đ</p>
+                        <p class="text-gray-700 mt-2">Kho: <%=b.getQuantity()%> sản phẩm</p>
 
-        <table border="1">
-            <thead>
-                <tr>                    
-                    <th>productname</th>                                   
-                    <th>price</th>
-                    <th>img</th>                          
+                        <a href="MainController?action=addtocart&id=<%=b.getId()%>"
+                           class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg text-lg shadow-md transition">
+                            Thêm vào giỏ hàng
+                        </a>
+                        <a href="MainController?action=home" class="text-blue-400 hover:text-blue-300">
+                            Trở về trang chủ
+                        </a>
+                    </div>
+                </div>
+                <% } else { %>
+                <p class="text-red-500 text-center text-lg">Sản phẩm không tồn tại.</p>
+                <% }%>
+            </div>
+        </div>
 
-                    <th>description</th>
-                    <th>quantity</th>                                                           
-                </tr>
-            </thead>
-            <tbody>
-
-                <tr>                    
-                    <td><%=b.getProductname()%></td>                                      
-                    <td><%=b.getPrice()%></td>
-                    <td><%=b.getSrcimg()%></td>                   
-
-                    <td><%=b.getDescription()%></td>
-                    <td><%=b.getQuantity()%></td>                    
-
-                </tr>
-            </tbody>
-
-            <a href="MainController?action=addtocart&id=<%=b.getId()%>&searchTerm=<%=searchTerm%>">
-                Add to Cart
-            </a>
-            <%
-                }
-            %>
-            
-            <%@include file="footer.jsp" %>
+        <%@include file="footer.jsp" %>
     </body>
 </html>
