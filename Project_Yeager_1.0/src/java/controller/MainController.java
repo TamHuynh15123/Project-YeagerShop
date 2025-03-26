@@ -7,11 +7,13 @@ package controller;
 
 import dao.productDAO;
 import dao.userDAO;
+import dto.CartItemDTO;
 import dto.CategoryDTO;
 import dto.productDTO;
 import dto.userDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -87,7 +89,7 @@ public class MainController extends HttpServlet {
         String url = DETAIL_PAGE;
 
         try {
-            int productid = Integer.parseInt(request.getParameter("id"));
+            int productid = Integer.parseInt(request.getParameter("pid"));
             if (productid > 0) {
                 productDTO product = productDAO.readByID(productid);
                 if (product != null) {
@@ -159,7 +161,7 @@ public class MainController extends HttpServlet {
 
         if (AuthUtils.isAdmin(session)) { // Kiểm tra có phải admin hay không
             try {
-                int id = Integer.parseInt(request.getParameter("id")); // Lấy id trên URL
+                int id = Integer.parseInt(request.getParameter("pid")); // Lấy id trên URL
                 productDTO product = productDAO.readByID(id);   // Lấy sản phẩm từ DB (nhớ viết hàm này trong DAO)
 
                 if (product != null) {
@@ -331,6 +333,82 @@ public class MainController extends HttpServlet {
         } catch (Exception e) {
             log("Error at processHome: " + e.toString());
             return "error.jsp"; // Chuyển hướng nếu lỗi
+        }
+    }
+
+    private String processAddToCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+
+            if (cart == null) {
+                cart = new ArrayList<>();
+                session.setAttribute("cart", cart);
+            }
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            String productName = request.getParameter("productName");
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            float price = Float.parseFloat(request.getParameter("price"));
+            String image = request.getParameter("image");
+
+            // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+            boolean found = false;
+            for (CartItemDTO item : cart) {
+                if (item.getId() == id) {
+                    item.setQuantity(item.getQuantity() + quantity);
+                    found = true;
+                    break;
+                }
+            }
+
+            // Nếu chưa có, thêm mới vào giỏ hàng
+            if (!found) {
+                CartItemDTO newItem = new CartItemDTO(id, productName, quantity, price, image);
+                cart.add(newItem);
+            }
+
+            request.setAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng!");
+            return "cart.jsp"; // Chuyển hướng đến trang giỏ hàng
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi thêm sản phẩm vào giỏ hàng.");
+            return "home.jsp";
+        }
+    }
+
+    private String processRemoveFromCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+
+            if (cart != null) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                cart.removeIf(item -> item.getId() == id);
+            }
+
+            return "cart.jsp";
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi xóa sản phẩm khỏi giỏ hàng.");
+            return "cart.jsp";
+        }
+    }
+
+    private String processCheckout(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            session.removeAttribute("cart"); // Xóa giỏ hàng sau khi thanh toán
+
+            request.setAttribute("message", "Thanh toán thành công!");
+            return "cart.jsp";
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Lỗi khi thanh toán.");
+            return "cart.jsp";
         }
     }
 

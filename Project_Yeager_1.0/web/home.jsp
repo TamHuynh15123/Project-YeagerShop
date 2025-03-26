@@ -87,13 +87,21 @@
                             Giá: ${o.price} đ
                         </p>
                         <div class="mt-auto flex justify-between space-x-2">
-                            <a href="detail.jsp?id=${o.id}" 
+                            <a href="MainController?action=view&pid=${o.id}" 
                                class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Xem chi tiết
                             </a>
+                            <% if(AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session))  {%>
                             <button class="w-1/2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
                                 Thêm vào giỏ
                             </button>
+                            <%}else if(AuthUtils.isAdmin(session)){%>
+                            <a href="MainController?action=edit&pid=${o.id}" 
+                               class="w-1/2 text-center bg-yellow-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                                Cập Nhật
+                            </a>
+                            
+                                    <%}%>
                         </div>
                     </div>
                 </c:forEach>

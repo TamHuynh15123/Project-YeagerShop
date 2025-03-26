@@ -115,15 +115,12 @@
 
                 <!-- Type -->
                 <div>
-                    <label for="txttype" class="block text-sm font-medium">Type:</label>
-                    <select id="txttype" name="txttype" required 
+                    <label for="txtcategory" class="block text-sm font-medium">Type:</label>
+                    <select id="txttype" name="txtcategory" required 
                             class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <c:forEach items="${listC}" var="o">
-
-                        <a class="ml-2 text-white" href="category?cid=${o.cid}">
-                            ${o.cname}
-                        </a>
-                    </c:forEach>
+                        <option value="1" selected>Balo/Áo khoác</option>
+                        <option value="2">Mô hình</option>
+                        <option value="3">Phụ kiện</option>
                     </select>
                 </div>
 
@@ -143,27 +140,27 @@
 
                 <!-- Image URL -->
                 <div class="form-field image-upload-section">
-                        <label for="txtimage">Product Image</label>
-                        <input type="hidden" id="txtImage" name="txtimage" value="${product.srcimg}">
-                        <div class="upload-container">
-                            <div class="file-upload-wrapper">
-                                <button type="button" class="file-upload-button">Choose Image</button>
-                                <input type="file" id="imageUpload" class="file-upload-input" accept="image/*">
-                            </div>
-                            <div class="file-info" id="fileInfo">No file selected</div>
-                            <div class="progress-bar-container" id="progressContainer">
-                                <div class="progress-bar" id="progressBar"></div>
-                            </div>
+                    <label for="txtimage">Product Image</label>
+                    <input type="hidden" id="txtImage" name="txtimage" value="${product.srcimg}">
+                    <div class="upload-container">
+                        <div class="file-upload-wrapper">
+                            <button type="button" class="file-upload-button">Choose Image</button>
+                            <input type="file" id="imageUpload" class="file-upload-input" accept="image/*">
                         </div>
-                        <c:if test="${not empty requestScope.txtImage_error}">
-                            <div class="error-message">${requestScope.txtImage_error}</div>
+                        <div class="file-info" id="fileInfo">No file selected</div>
+                        <div class="progress-bar-container" id="progressContainer">
+                            <div class="progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+                    <c:if test="${not empty requestScope.txtImage_error}">
+                        <div class="error-message">${requestScope.txtImage_error}</div>
+                    </c:if>
+                    <div class="image-preview" id="imagePreview">
+                        <c:if test="${not empty product.srcimg}">
+                            <img src="${product.srcimg}" alt="Product Preview">
                         </c:if>
-                        <div class="image-preview" id="imagePreview">
-                            <c:if test="${not empty product.srcimg}">
-                                <img src="${product.srcimg}" alt="Product Preview">
-                            </c:if>
-                        </div>
-                    
+                    </div>
+
                 </div>
 
                 <!-- Status -->
@@ -177,10 +174,10 @@
                 </div>
 
                 <!-- Hidden Input -->
-                
+
 
                 <!-- Submit Button -->
-                
+
                 <div class="text-center">
                     <button type="submit" 
                             class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition duration-200">
@@ -190,7 +187,7 @@
             </form>
 
             <div class="text-center mt-4">
-                <a href="MainController?action=search" class="text-blue-400 hover:text-blue-300">
+                <a href="MainController?action=home" class="text-blue-400 hover:text-blue-300">
                     Trở về trang chủ
                 </a>
             </div>
