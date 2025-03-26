@@ -142,7 +142,7 @@ public class MainController extends HttpServlet {
                     boolean updated = productDAO.update(product);
                     System.out.println("Update status: " + updated);
                     url = HOME_PAGE;
-                    request.setAttribute("successMessage", "Update Successfully!");
+                    request.getSession().setAttribute("successMessage", "Update Successfully!");
                     processSearch(request, response);
                 } else {
                     request.setAttribute("product", product);
@@ -263,7 +263,7 @@ public class MainController extends HttpServlet {
                 boolean inserted = productDAO.add(product);
                 if (inserted) {
                     url = HOME_PAGE;
-                    request.setAttribute("successMessage", "Add Successfully!");
+                    request.getSession().setAttribute("successMessage", "Add Successfully!");
                     processSearch(request, response); // Load lại danh sách sản phẩm
                 } else {
                     url = ADD_PAGE;

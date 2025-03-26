@@ -37,7 +37,7 @@
             <!-- Description -->
             <div>
                 <label for="txtdescription" class="block text-sm font-medium">Description:</label>
-                <textarea id="txtdescription" name="txtdescription" rows="3"
+                <textarea id="txtdescription" name="txtdescription" rows="3" required
                           class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white"><%= description %></textarea>
             </div>
 
@@ -53,7 +53,7 @@
                 </div>
                 <div>
                     <label for="txtprice" class="block text-sm font-medium">Price:</label>
-                    <input type="number" id="txtprice" name="txtprice" step="0.01" value="<%= price %>" required
+                    <input type="number" id="txtprice" name="txtprice" step="0.01" min="10" value="<%= price %>" required
                            class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:ring focus:ring-blue-500"/>
                 </div>
             </div>

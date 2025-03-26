@@ -34,12 +34,8 @@
 
         <div class="bg-gray-700 p-4">
             <div class="container mx-auto flex justify-between items-center">
-                <c:if test="${not empty sessionScope.successMessage}">
-                    <div class="alert alert-success">
-                        ${sessionScope.successMessage}
-                    </div>
-                    <c:remove var="successMessage" scope="session"/>
-                </c:if>
+
+
                 <div class="text-white">
                     <span class="font-bold">
                         Categories:
@@ -73,6 +69,12 @@
                         <i class="fas fa-plus text-xs mr-1"></i> Add
                     </a>
                     <% }%>
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <div style="background-color: #d4edda; color: red; padding: 10px; border-radius: 5px;">
+                            ${sessionScope.successMessage}
+                        </div>
+                        <c:remove var="successMessage" scope="session"/>
+                    </c:if>
                 </div>
             </div>
         </div>
