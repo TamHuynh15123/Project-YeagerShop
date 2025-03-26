@@ -191,28 +191,51 @@ public class MainController extends HttpServlet {
 
                 String productname = request.getParameter("txtproductname");
                 String description = request.getParameter("txtdescription");
-                String type = request.getParameter("txttype");
-                int quantity = Integer.parseInt(request.getParameter("txtquantity"));
-                float price = Float.parseFloat(request.getParameter("txtprice"));
+                int quantity = 0;
+                float price = 0;
+                int category_id = 0;
                 String image = request.getParameter("txtimage");
                 boolean status = Boolean.parseBoolean(request.getParameter("txtstatus"));
 
-                if (quantity < 0) {
+                // Kiểm tra số nguyên và float
+                try {
+                    quantity = Integer.parseInt(request.getParameter("txtquantity"));
+                    if (quantity < 0) {
+                        checkError = true;
+                        request.setAttribute("txtQuantity_error", "Quantity must be >= 0.");
+                    }
+                } catch (NumberFormatException e) {
                     checkError = true;
-                    request.setAttribute("txtQuantity_error", "Quantity >= 0.");
+                    request.setAttribute("txtQuantity_error", "Invalid quantity format.");
                 }
 
-                productDTO product = new productDTO(productname, description, quantity, price, status, image);
+                try {
+                    price = Float.parseFloat(request.getParameter("txtprice"));
+                    if (price < 0) {
+                        checkError = true;
+                        request.setAttribute("txtPrice_error", "Price must be >= 0.");
+                    }
+                } catch (NumberFormatException e) {
+                    checkError = true;
+                    request.setAttribute("txtPrice_error", "Invalid price format.");
+                }
+
+                try {
+                    category_id = Integer.parseInt(request.getParameter("txtcategory"));
+                } catch (NumberFormatException e) {
+                    checkError = true;
+                    request.setAttribute("txtCategory_error", "Invalid category ID.");
+                }
+
+                productDTO product = new productDTO(productname, description, category_id, quantity, price, status, image);
 
                 if (!checkError) {
                     boolean inserted = productDAO.add(product);
-                    System.out.println("Insert status: " + inserted);
-
                     if (inserted) {
                         url = HOME_PAGE;
                         processSearch(request, response); // Load lại danh sách sản phẩm
                     } else {
-                        url = ADD_PAGE; // Có thể là addForm.jsp
+                        url = ADD_PAGE;
                         request.setAttribute("errorMessage", "Insert failed.");
                     }
                 } else {
@@ -221,9 +244,10 @@ public class MainController extends HttpServlet {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                request.setAttribute("errorMessage", "An error occurred while adding the product.");
+                url = ADD_PAGE;
             }
         }
-
         return url;
     }
 
