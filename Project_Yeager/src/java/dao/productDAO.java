@@ -34,7 +34,6 @@ public class productDAO {
                         rs.getInt("id"),
                         rs.getString("productname"),
                         rs.getString("description"),
-                        
                         rs.getInt("Quantity"),
                         rs.getFloat("price"),
                         rs.getBoolean("status"),
@@ -62,7 +61,6 @@ public class productDAO {
                         rs.getInt("id"),
                         rs.getString("productname"),
                         rs.getString("description"),
-                        
                         rs.getInt("Quantity"),
                         rs.getFloat("price"),
                         rs.getBoolean("status"),
@@ -88,7 +86,6 @@ public class productDAO {
                         rs.getInt("id"),
                         rs.getString("productname"),
                         rs.getString("description"),
-                        
                         rs.getInt("Quantity"),
                         rs.getFloat("price"),
                         rs.getBoolean("status"),
@@ -104,23 +101,25 @@ public class productDAO {
 
     public boolean update(productDTO entity) {
         String sql = "UPDATE product SET "
-                + " productname=?, description=?, quantity=?, price=?, status=?,category_id = ?, srcimg=? "
-                + "  WHERE id=?";
+                + " productname=?, description=?, quantity=?, price=?, status=?, srcimg=? "
+                + " WHERE id=?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
+
             ps.setString(1, entity.getProductname());
             ps.setString(2, entity.getDescription());
-            
             ps.setInt(3, entity.getQuantity());
             ps.setFloat(4, entity.getPrice());
             ps.setBoolean(5, entity.isStatus());
+
             ps.setString(6, entity.getSrcimg());
             ps.setInt(7, entity.getId());
+
             int i = ps.executeUpdate();
             return i > 0;
         } catch (Exception e) {
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
         return false;
     }
@@ -134,19 +133,20 @@ public class productDAO {
 
             ps.setString(1, entity.getProductname());
             ps.setString(2, entity.getDescription());
-            
             ps.setInt(3, entity.getQuantity());
             ps.setFloat(4, entity.getPrice());
             ps.setBoolean(5, entity.isStatus());
-            ps.setString(6, entity.getSrcimg());
+            ps.setInt(6, entity.getCategory_id());
+            ps.setString(7, entity.getSrcimg());
 
             int i = ps.executeUpdate();
             return i > 0;
         } catch (Exception e) {
-            e.printStackTrace(); // In ra chi tiết lỗi
+            e.printStackTrace(); // In lỗi ra console
         }
         return false;
     }
+
     public List<CategoryDTO> getAllCategory() {
         List<CategoryDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM Categories";
@@ -154,13 +154,12 @@ public class productDAO {
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 CategoryDTO b = new CategoryDTO(
                         rs.getInt("category_id"),
                         rs.getString("category_name")
-                        
                 );
                 result.add(b);
             }
@@ -169,7 +168,7 @@ public class productDAO {
         }
         return result;
     }
-    
+
     public List<productDTO> readAll() {
         List<productDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM product";
@@ -177,14 +176,13 @@ public class productDAO {
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 productDTO b = new productDTO(
                         rs.getInt("id"),
                         rs.getString("productname"),
                         rs.getString("description"),
-                        
                         rs.getInt("Quantity"),
                         rs.getFloat("price"),
                         rs.getBoolean("status"),
@@ -197,6 +195,7 @@ public class productDAO {
         }
         return result;
     }
+
     public List<productDTO> getProductByCate(int cid) {
         List<productDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM product WHERE category_id = ?";
@@ -211,7 +210,6 @@ public class productDAO {
                         rs.getInt("id"),
                         rs.getString("productname"),
                         rs.getString("description"),
-                        
                         rs.getInt("Quantity"),
                         rs.getFloat("price"),
                         rs.getBoolean("status"),
@@ -224,10 +222,10 @@ public class productDAO {
         }
         return result;
     }
-    
+
     public static void main(String[] args) {
         productDAO dao = new productDAO();
-        
+
         List<CategoryDTO> list = dao.getAllCategory();
         for (CategoryDTO dTO : list) {
             System.out.println(dTO);
