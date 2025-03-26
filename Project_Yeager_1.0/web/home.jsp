@@ -93,7 +93,7 @@
                             </a>
                             <% if(AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session))  {%>
                             <a href="MainController?action=addcart&pid=${o.id}" 
-                               class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                               class="w-1/2 text-center bg-red-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Thêm vào giỏ
                             </a>
                             <%}else if(AuthUtils.isAdmin(session)){%>

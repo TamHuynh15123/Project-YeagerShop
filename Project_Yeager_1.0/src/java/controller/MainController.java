@@ -14,6 +14,7 @@ import dto.userDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -337,46 +338,36 @@ public class MainController extends HttpServlet {
         }
     }
 
-    private String processAddToCart(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private String processAddToCart(HttpServletRequest request, HttpServletResponse response) {
         try {
-            HttpSession session = request.getSession();
-            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
-
-            if (cart == null) {
-                cart = new ArrayList<>();
-                session.setAttribute("cart", cart);
-            }
-
-            int id = Integer.parseInt(request.getParameter("pid"));
-            String productName = request.getParameter("productName");
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
             float price = Float.parseFloat(request.getParameter("price"));
             String image = request.getParameter("image");
 
-            // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-            boolean found = false;
-            for (CartItemDTO item : cart) {
-                if (item.getId() == id) {
-                    item.setQuantity(item.getQuantity() + quantity);
-                    found = true;
-                    break;
-                }
+            HttpSession session = request.getSession();
+            HashMap<Integer, CartItemDTO> cart = (HashMap<Integer, CartItemDTO>) session.getAttribute("CART");
+
+            if (cart == null) {
+                cart = new HashMap<>();
             }
 
-            // Nếu chưa có, thêm mới vào giỏ hàng
-            if (!found) {
-                CartItemDTO newItem = new CartItemDTO(id, productName, quantity, price, image);
-                cart.add(newItem);
+            if (cart.containsKey(id)) {
+                // Nếu sản phẩm đã tồn tại, tăng số lượng
+                CartItemDTO item = cart.get(id);
+                item.setQuantity(item.getQuantity() + 1);
+            } else {
+                // Nếu chưa có, thêm mới vào giỏ hàng
+                cart.put(id, new CartItemDTO(id, name, 1, price, image));
             }
 
-            request.setAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng!");
-            return "cart.jsp"; // Chuyển hướng đến trang giỏ hàng
+            session.setAttribute("CART", cart);
+            request.setAttribute("MESSAGE", "Sản phẩm đã được thêm vào giỏ hàng!");
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi thêm sản phẩm vào giỏ hàng.");
-            return "home.jsp";
+            log("Error at processAddToCart: " + e.toString());
         }
+
+        return "cart.jsp";  // Chuyển hướng đến trang giỏ hàng
     }
 
     private String processRemoveFromCart(HttpServletRequest request, HttpServletResponse response)
