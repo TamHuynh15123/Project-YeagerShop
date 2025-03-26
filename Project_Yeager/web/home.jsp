@@ -73,9 +73,9 @@
         <div class="container mx-auto py-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <c:forEach items="${listP}" var="o">
-                    <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="bg-white p-4 rounded-lg shadow flex flex-col h-full">
                         <div class="relative">
-                            <img alt="" class="w-full h-auto" height="400" src="${o.srcimg}" width="300"/>
+                            <img alt="" class="w-full h-auto object-cover" src="${o.srcimg}" width="300"/>
                         </div>
                         <h2 class="mt-4 text-lg font-bold">
                             ${o.productname}
@@ -86,7 +86,7 @@
                         <p class="mt-2 text-xl font-bold">
                             ${o.price}
                         </p>
-                        <div class="mt-4 flex justify-between">
+                        <div class="mt-auto flex justify-between">
                             <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="window.location.href = 'detail.jsp'">View Product</button>
                             <button class="bg-green-500 text-white px-4 py-2 rounded">Add to Cart</button>
                         </div>
@@ -94,11 +94,7 @@
                 </c:forEach>
 
             </div>
-            <div class="mt-8 flex justify-center">
-                <c:forEach var="i" begin="1" end="${noOfPages}">
-                    <a class="mx-1 px-3 py-2 rounded ${currentPage == i ? 'bg-gray-700 text-white' : 'bg-white text-gray-700'}" href="category?cid=${categoryId}&page=${i}">${i}</a>
-                </c:forEach>
-            </div>
+            
         </div>
 
         <%@include file="footer.jsp" %>
