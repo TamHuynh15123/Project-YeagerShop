@@ -1,6 +1,6 @@
 <%@page import="utils.AuthUtils"%>
 <%@page import="dto.productDTO"%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     productDTO product = (productDTO) request.getAttribute("product");
     String txtQuantityError = (String) request.getAttribute("txtQuantity_error");
@@ -21,6 +21,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+        
         <%if (AuthUtils.isAdmin(session)) {%>
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 class="text-2xl font-semibold text-center mb-4">Update Product</h2>
@@ -102,7 +103,7 @@
         <%} else {%>
         <h1 style="color: red">You do not have permission to do that</h1>
         <%}%>
-
+        
         <!-- JavaScript -->
         <script>
             $(document).ready(function () {

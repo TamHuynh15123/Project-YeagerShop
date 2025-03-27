@@ -369,48 +369,53 @@ public class MainController extends HttpServlet {
         HttpSession session = request.getSession();
         int productId = Integer.parseInt(request.getParameter("pid"));
 
-        // Lấy thông tin sản phẩm từ database
-        productDAO dao = new productDAO();
-        productDTO product = dao.readByID(productId);
+        if (AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session)) {
+            // Lấy thông tin sản phẩm từ database
+            productDAO dao = new productDAO();
+            productDTO product = dao.readByID(productId);
 
-        if (product == null) {
-            request.setAttribute("message", "Sản phẩm không tồn tại.");
-            return "error.jsp";
-        }
-
-        // Lấy giỏ hàng từ session (nếu chưa có thì tạo mới)
-        List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
-        if (cart == null) {
-            cart = new ArrayList<>();
-        }
-
-        // Kiểm tra xem sản phẩm đã có trong giỏ chưa
-        boolean found = false;
-        for (CartItemDTO item : cart) {
-            if (item.getId() == productId) {
-                item.setQuantity(item.getQuantity() + 1);
-                found = true;
-                break;
+            if (product == null) {
+                request.setAttribute("message", "Sản phẩm không tồn tại.");
+                return "error.jsp";
             }
+
+            // Lấy giỏ hàng từ session (nếu chưa có thì tạo mới)
+            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+            if (cart == null) {
+                cart = new ArrayList<>();
+            }
+
+            // Kiểm tra xem sản phẩm đã có trong giỏ chưa
+            boolean found = false;
+            for (CartItemDTO item : cart) {
+                if (item.getId() == productId) {
+                    item.setQuantity(item.getQuantity() + 1);
+                    found = true;
+                    break;
+                }
+            }
+
+            // Nếu chưa có trong giỏ hàng, thêm mới
+            if (!found) {
+                CartItemDTO newItem = new CartItemDTO(
+                        product.getId(),
+                        product.getProductname(),
+                        1, // Mặc định thêm 1 sản phẩm
+                        product.getPrice(),
+                        product.getSrcimg()
+                );
+                cart.add(newItem);
+            }
+
+            // Cập nhật giỏ hàng trong session
+            session.setAttribute("cart", cart);
+
+            // Chuyển hướng về trang giỏ hàng hoặc sản phẩm
+            return "MainController?action=viewcart";
+        } else if (!AuthUtils.isLoggedIn(session)) {
+            return LOGIN_PAGE;
         }
-
-        // Nếu chưa có trong giỏ hàng, thêm mới
-        if (!found) {
-            CartItemDTO newItem = new CartItemDTO(
-                    product.getId(),
-                    product.getProductname(),
-                    1, // Mặc định thêm 1 sản phẩm
-                    product.getPrice(),
-                    product.getSrcimg()
-            );
-            cart.add(newItem);
-        }
-
-        // Cập nhật giỏ hàng trong session
-        session.setAttribute("cart", cart);
-
-        // Chuyển hướng về trang giỏ hàng hoặc sản phẩm
-        return "MainController?action=viewcart";
+        return processHome(request, response);
     }
 
     private String processRemoveFromCart(HttpServletRequest request, HttpServletResponse response) {
@@ -429,17 +434,19 @@ public class MainController extends HttpServlet {
     private String processCheckout(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+        if (AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session)) {
+            if (cart == null || cart.isEmpty()) {
+                request.setAttribute("message", "Giỏ hàng trống, không thể thanh toán.");
+                return "cart.jsp";
+            }
 
-        if (cart == null || cart.isEmpty()) {
-            request.setAttribute("message", "Giỏ hàng trống, không thể thanh toán.");
-            return "cart.jsp";
+            // Xử lý thanh toán (giả định)
+            session.removeAttribute("cart"); // Xóa giỏ hàng sau khi thanh toán
+            request.setAttribute("message", "Thanh toán thành công!");
+
+            return "checkoutSuccess.jsp"; // Tạo trang này để hiển thị thông báo thành công
         }
-
-        // Xử lý thanh toán (giả định)
-        session.removeAttribute("cart"); // Xóa giỏ hàng sau khi thanh toán
-        request.setAttribute("message", "Thanh toán thành công!");
-
-        return "checkoutSuccess.jsp"; // Tạo trang này để hiển thị thông báo thành công
+        return processHome(request, response);
     }
 
     private String processViewCart(HttpServletRequest request, HttpServletResponse response)
