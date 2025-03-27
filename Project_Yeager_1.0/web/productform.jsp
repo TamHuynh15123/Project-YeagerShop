@@ -76,7 +76,7 @@
 
                     <div class="mt-4" id="imagePreview">
                         <% if (!srcimg.isEmpty()) {                            %>
-                        <img src="<%= srcimg%>" alt="Product Preview" class="w-full max-h-40 object-cover rounded-lg shadow">
+                        <img src="<%= srcimg%>" alt="Product Preview" class="w-full  object-cover rounded-lg shadow">
                         <% }                        %>
                     </div>
                 </div>
