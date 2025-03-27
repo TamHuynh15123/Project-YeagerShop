@@ -40,7 +40,7 @@
                     <span class="font-bold">
                         Categories:
                     </span>
-                    <a class="ml-2 text-white ${empty tag ? 'active' : ''}" href="category">
+                    <a class="ml-2 text-white ${empty tag ? 'active' : ''}" href="MainController?action=home">
                         All
                     </a>
                     <c:forEach items="${listC}" var="o">

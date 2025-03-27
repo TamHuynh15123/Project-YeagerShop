@@ -171,6 +171,32 @@ public class productDAO {
 
     public List<productDTO> readAll() {
         List<productDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM product WHERE status = 1 ";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                productDTO b = new productDTO(
+                        rs.getInt("id"),
+                        rs.getString("productname"),
+                        rs.getString("description"),
+                        rs.getInt("Quantity"),
+                        rs.getFloat("price"),
+                        rs.getBoolean("status"),
+                        rs.getString("srcimg")
+                );
+                result.add(b);
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return result;
+    }
+    public List<productDTO> readAllAD() {
+        List<productDTO> result = new ArrayList<>();
         String sql = "SELECT * FROM product";
 
         try {
@@ -198,7 +224,33 @@ public class productDAO {
 
     public List<productDTO> getProductByCate(int cid) {
         List<productDTO> result = new ArrayList<>();
-        String sql = "SELECT * FROM product WHERE category_id = ?";
+        String sql = "SELECT * FROM product WHERE category_id = ? and status = 1 ";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, cid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                productDTO b = new productDTO(
+                        rs.getInt("id"),
+                        rs.getString("productname"),
+                        rs.getString("description"),
+                        rs.getInt("Quantity"),
+                        rs.getFloat("price"),
+                        rs.getBoolean("status"),
+                        rs.getString("srcimg")
+                );
+                result.add(b);
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return result;
+    }
+    public List<productDTO> getProductByCateAD(int cid) {
+        List<productDTO> result = new ArrayList<>();
+        String sql = "SELECT * FROM product WHERE category_id = ? ";
 
         try {
             Connection conn = DBUtils.getConnection();

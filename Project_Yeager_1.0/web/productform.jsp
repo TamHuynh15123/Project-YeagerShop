@@ -4,7 +4,7 @@
 <%
     productDTO product = (productDTO) request.getAttribute("product");
     String txtQuantityError = (String) request.getAttribute("txtQuantity_error");
-    
+
     int id = (product != null) ? product.getId() : 0;
     String productname = (product != null) ? product.getProductname() : "";
     String description = (product != null) ? product.getDescription() : "";
@@ -21,7 +21,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
-        
+
         <%if (AuthUtils.isAdmin(session)) {%>
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full">
             <h2 class="text-2xl font-semibold text-center mb-4">Update Product</h2>
@@ -50,9 +50,9 @@
                         <label for="txtquantity" class="block text-sm font-medium">Quantity:</label>
                         <input type="number" id="txtquantity" name="txtquantity" value="<%= quantity%>" min="0" required
                                class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:ring focus:ring-blue-500"/>
-                        <% if (txtQuantityError != null) {                            %>
+                        <% if (txtQuantityError != null) {%>
                         <span class="text-red-500 text-sm animate-pulse"><%= txtQuantityError%></span>
-                        <% }                        %>
+                        <% }%>
                     </div>
                     <div>
                         <label for="txtprice" class="block text-sm font-medium">Price:</label>
@@ -75,9 +75,9 @@
                     </div>
 
                     <div class="mt-4" id="imagePreview">
-                        <% if (!srcimg.isEmpty()) {                            %>
+                        <% if (!srcimg.isEmpty()) {%>
                         <img src="<%= srcimg%>" alt="Product Preview" class="w-full  object-cover rounded-lg shadow">
-                        <% }                        %>
+                        <% }%>
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@
         <%} else {%>
         <h1 style="color: red">You do not have permission to do that</h1>
         <%}%>
-        
+
         <!-- JavaScript -->
         <script>
             $(document).ready(function () {
@@ -116,18 +116,18 @@
                             $('#fileInfo').text('No file selected');
                             return;
                         }
-                        
+
                         if (file.size > 1024 * 1024) {
                             alert('File size must be under 1MB');
                             this.value = '';
                             $('#fileInfo').text('No file selected');
                             return;
                         }
-                        
+
                         const reader = new FileReader();
                         reader.onload = function (e) {
                             $('#txtImage').val(e.target.result);
-                            $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview" class="w-full max-h-40 object-cover rounded-lg shadow">');
+                            $('#imagePreview').html('<img src="' + e.target.result + '" alt="Preview" class="w-full object-cover rounded-lg shadow">');
                         };
                         reader.readAsDataURL(file);
                         $('#fileInfo').text(file.name);

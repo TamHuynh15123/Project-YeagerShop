@@ -74,13 +74,20 @@ public class MainController extends HttpServlet {
         if (searchTerm == null) {
             searchTerm = "";
         }
+        HttpSession session = request.getSession();
         productDAO dao = new productDAO();
-
         List<CategoryDTO> listC = dao.getAllCategory();
-        List<productDTO> product = dao.searchByName(searchTerm);
-        request.setAttribute("listP", product);
-        request.setAttribute("listC", listC);
-        request.setAttribute("searchTerm", searchTerm);
+        if (!AuthUtils.isAdmin(session)) {
+            List<productDTO> product = dao.searchByName(searchTerm);
+            request.setAttribute("listP", product);
+            request.setAttribute("listC", listC);
+            request.setAttribute("searchTerm", searchTerm);
+        } else if (AuthUtils.isAdmin(session)) {
+            List<productDTO> product = dao.searchByNameAD(searchTerm);
+            request.setAttribute("listP", product);
+            request.setAttribute("listC", listC);
+            request.setAttribute("searchTerm", searchTerm);
+        }
 
         return HOME_PAGE;
     }
@@ -351,13 +358,20 @@ public class MainController extends HttpServlet {
 
     private String processHome(HttpServletRequest request, HttpServletResponse response) {
         try {
+            HttpSession session = request.getSession();
+            if (!AuthUtils.isAdmin(session)) {
+                List<CategoryDTO> listC = productDAO.getAllCategory();
+                List<productDTO> listP = productDAO.readAll();
 
-            List<CategoryDTO> listC = productDAO.getAllCategory();
-            List<productDTO> listP = productDAO.readAll();
+                request.setAttribute("listC", listC);
+                request.setAttribute("listP", listP);
+            } else if (AuthUtils.isAdmin(session)) {
+                List<CategoryDTO> listC = productDAO.getAllCategory();
+                List<productDTO> listP = productDAO.readAllAD();
 
-            request.setAttribute("listC", listC);
-            request.setAttribute("listP", listP);
-
+                request.setAttribute("listC", listC);
+                request.setAttribute("listP", listP);
+            }
             return "home.jsp"; // Chuyển đến trang chủ
         } catch (Exception e) {
             log("Error at processHome: " + e.toString());
