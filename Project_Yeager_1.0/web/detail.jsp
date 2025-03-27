@@ -25,14 +25,16 @@
                         <p class="text-gray-600 mt-2">Mô tả: <%=b.getDescription()%></p>
                         <p class="mt-4 text-xl font-semibold text-red-600">Giá: <%=b.getPrice()%> đ</p>
                         <p class="text-gray-700 mt-2">Kho: <%=b.getQuantity()%> sản phẩm</p>
-
-                        <a href="MainController?action=addtocart&id=<%=b.getId()%>"
+                        
+                        <a href="MainController?action=addcart&pid=<%=b.getId()%>"
                            class="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg text-lg shadow-md transition">
                             Thêm vào giỏ hàng
                         </a>
+                           <div class="text-center mt-4">  
                         <a href="MainController?action=home" class="text-blue-400 hover:text-blue-300">
                             Trở về trang chủ
                         </a>
+                               </div> 
                     </div>
                 </div>
                 <% } else { %>

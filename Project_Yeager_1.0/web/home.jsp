@@ -34,11 +34,13 @@
 
         <div class="bg-gray-700 p-4">
             <div class="container mx-auto flex justify-between items-center">
+
+
                 <div class="text-white">
                     <span class="font-bold">
                         Categories:
                     </span>
-                    <a class="ml-2 text-white ${empty tag ? 'active' : ''}" href="category">
+                    <a class="ml-2 text-white ${empty tag ? 'active' : ''}" href="MainController?action=home">
                         All
                     </a>
                     <c:forEach items="${listC}" var="o">
@@ -67,9 +69,22 @@
                         <i class="fas fa-plus text-xs mr-1"></i> Add
                     </a>
                     <% }%>
+                    <c:if test="${not empty sessionScope.successMessage}">
+                        <div style="background-color: #d4edda; color: red; padding: 10px; border-radius: 5px;">
+                            ${sessionScope.successMessage}
+                        </div>
+                        <c:remove var="successMessage" scope="session"/>
+                    </c:if>
                 </div>
             </div>
         </div>
+        <c:if test="${empty listP}">
+            <p class="text-red-600 bg-red-100 border border-red-400 px-4 py-2 rounded-md">
+                Không tìm thấy sản phẩm nào phù hợp!
+            </p>
+
+        </c:if>
+
         <div class="container mx-auto py-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <c:forEach items="${listP}" var="o">
@@ -91,17 +106,18 @@
                                class="w-1/2 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Xem chi tiết
                             </a>
-                            <% if(AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session))  {%>
-                            <button class="w-1/2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
+                            <% if (AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session)) {%>
+                            <a href="MainController?action=addcart&pid=${o.id}" 
+                               class="w-1/2 text-center bg-red-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Thêm vào giỏ
-                            </button>
-                            <%}else if(AuthUtils.isAdmin(session)){%>
+                            </a>
+                            <%} else if (AuthUtils.isAdmin(session)) {%>
                             <a href="MainController?action=edit&pid=${o.id}" 
                                class="w-1/2 text-center bg-yellow-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 Cập Nhật
                             </a>
-                            
-                                    <%}%>
+
+                            <%}%>
                         </div>
                     </div>
                 </c:forEach>

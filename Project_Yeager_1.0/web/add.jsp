@@ -4,6 +4,7 @@
     Author     : dangk
 --%>
 
+<%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -19,6 +20,8 @@
                     <img src="img logo/logo2.png" alt="YeagerShop logo" width="60" height="60"/>
                     <span class="ml-3 text-4xl font-bold">YeagerShop</span>
                 </div>
+
+
                 <nav class="space-x-4">
                     <a href="MainController?action=home" class="hover:text-gray-400">Trang chủ</a>
                     <!-- Sản phẩm -->
@@ -93,7 +96,7 @@
 
             </div>
         </header>
-
+        <%if (AuthUtils.isAdmin(session)) {%>
         <div class="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-lg mt-10">
             <h2 class="text-2xl font-semibold mb-4 text-center">Add New Product</h2>
 
@@ -109,7 +112,7 @@
                 <!-- Description -->
                 <div>
                     <label for="txtdescription" class="block text-sm font-medium">Description:</label>
-                    <textarea id="txtdescription" name="txtdescription" rows="3"
+                    <textarea id="txtdescription" name="txtdescription" rows="3" required
                               class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                 </div>
 
@@ -133,7 +136,7 @@
                     </div>
                     <div>
                         <label for="txtprice" class="block text-sm font-medium">Price:</label>
-                        <input type="number" id="txtprice" name="txtprice" step="0.01" required 
+                        <input type="number" id="txtprice" name="txtprice" step="0.01" min="10" required 
                                class="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
                     </div>
                 </div>
@@ -192,7 +195,9 @@
                 </a>
             </div>
         </div>
-
+        <%} else {%>
+        <h1 style="color: red">You do not have permission to do that</h1>
+        <%}%>
         <%@include file="footer.jsp" %>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>

@@ -14,6 +14,7 @@ import dto.userDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -73,13 +74,20 @@ public class MainController extends HttpServlet {
         if (searchTerm == null) {
             searchTerm = "";
         }
+        HttpSession session = request.getSession();
         productDAO dao = new productDAO();
-
         List<CategoryDTO> listC = dao.getAllCategory();
-        List<productDTO> product = dao.searchByName(searchTerm);
-        request.setAttribute("listP", product);
-        request.setAttribute("listC", listC);
-        request.setAttribute("searchTerm", searchTerm);
+        if (!AuthUtils.isAdmin(session)) {
+            List<productDTO> product = dao.searchByName(searchTerm);
+            request.setAttribute("listP", product);
+            request.setAttribute("listC", listC);
+            request.setAttribute("searchTerm", searchTerm);
+        } else if (AuthUtils.isAdmin(session)) {
+            List<productDTO> product = dao.searchByNameAD(searchTerm);
+            request.setAttribute("listP", product);
+            request.setAttribute("listC", listC);
+            request.setAttribute("searchTerm", searchTerm);
+        }
 
         return HOME_PAGE;
     }
@@ -113,6 +121,7 @@ public class MainController extends HttpServlet {
 
     private String processUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
         if (AuthUtils.isAdmin(session)) {
@@ -140,6 +149,7 @@ public class MainController extends HttpServlet {
                     boolean updated = productDAO.update(product);
                     System.out.println("Update status: " + updated);
                     url = HOME_PAGE;
+                    request.getSession().setAttribute("successMessage", "Update Successfully!");
                     processSearch(request, response);
                 } else {
                     request.setAttribute("product", product);
@@ -156,7 +166,8 @@ public class MainController extends HttpServlet {
     private String processEdit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String url = HOME_PAGE; // Hoặc một trang mặc định khác
+        String url = HOME_PAGE;
+        processSearch(request, response);// Hoặc một trang mặc định khác
         HttpSession session = request.getSession();
 
         if (AuthUtils.isAdmin(session)) { // Kiểm tra có phải admin hay không
@@ -187,68 +198,93 @@ public class MainController extends HttpServlet {
         String url = LOGIN_PAGE;
         HttpSession session = request.getSession();
 
-        if (AuthUtils.isAdmin(session)) { // Kiểm tra quyền admin
+        if (!AuthUtils.isAdmin(session)) { // Chỉ cho phép admin truy cập
+            request.setAttribute("errorMessage", "Bạn không có quyền truy cập vào trang này.");
+            return LOGIN_PAGE;
+        }
+
+        try {
+            boolean checkError = false;
+
+            String productname = request.getParameter("txtproductname");
+            String description = request.getParameter("txtdescription");
+            int quantity = 0;
+            float price = 0;
+            int category_id = 0;
+            String image = request.getParameter("txtimage");
+            boolean status = Boolean.parseBoolean(request.getParameter("txtstatus"));
+
+            // Kiểm tra tên sản phẩm không được để trống
+            if (productname == null || productname.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("txtProductName_error", "Product name is required.");
+            }
+
+            // Kiểm tra mô tả sản phẩm không được để trống
+            if (description == null || description.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("txtDescription_error", "Description is required.");
+            }
+
+            // Kiểm tra số lượng
             try {
-                boolean checkError = false;
-
-                String productname = request.getParameter("txtproductname");
-                String description = request.getParameter("txtdescription");
-                int quantity = 0;
-                float price = 0;
-                int category_id = 0;
-                String image = request.getParameter("txtimage");
-                boolean status = Boolean.parseBoolean(request.getParameter("txtstatus"));
-
-                // Kiểm tra số nguyên và float
-                try {
-                    quantity = Integer.parseInt(request.getParameter("txtquantity"));
-                    if (quantity < 0) {
-                        checkError = true;
-                        request.setAttribute("txtQuantity_error", "Quantity must be >= 0.");
-                    }
-                } catch (NumberFormatException e) {
+                quantity = Integer.parseInt(request.getParameter("txtquantity"));
+                if (quantity < 0) {
                     checkError = true;
-                    request.setAttribute("txtQuantity_error", "Invalid quantity format.");
+                    request.setAttribute("txtQuantity_error", "Quantity must be >= 0.");
                 }
+            } catch (NumberFormatException e) {
+                checkError = true;
+                request.setAttribute("txtQuantity_error", "Invalid quantity format.");
+            }
 
-                try {
-                    price = Float.parseFloat(request.getParameter("txtprice"));
-                    if (price < 0) {
-                        checkError = true;
-                        request.setAttribute("txtPrice_error", "Price must be >= 0.");
-                    }
-                } catch (NumberFormatException e) {
+            // Kiểm tra giá
+            try {
+                price = Float.parseFloat(request.getParameter("txtprice"));
+                if (price < 0) {
                     checkError = true;
-                    request.setAttribute("txtPrice_error", "Invalid price format.");
+                    request.setAttribute("txtPrice_error", "Price must be >= 0.");
                 }
+            } catch (NumberFormatException e) {
+                checkError = true;
+                request.setAttribute("txtPrice_error", "Invalid price format.");
+            }
 
-                try {
-                    category_id = Integer.parseInt(request.getParameter("txtcategory"));
-                } catch (NumberFormatException e) {
-                    checkError = true;
-                    request.setAttribute("txtCategory_error", "Invalid category ID.");
-                }
+            // Kiểm tra danh mục
+            try {
+                category_id = Integer.parseInt(request.getParameter("txtcategory"));
+            } catch (NumberFormatException e) {
+                checkError = true;
+                request.setAttribute("txtCategory_error", "Invalid category ID.");
+            }
 
-                productDTO product = new productDTO(productname, description, category_id, quantity, price, status, image);
+            // Kiểm tra hình ảnh
+            if (image == null || image.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("txtImage_error", "Product image is required.");
+            }
 
-                if (!checkError) {
-                    boolean inserted = productDAO.add(product);
-                    if (inserted) {
-                        url = HOME_PAGE;
-                        processSearch(request, response); // Load lại danh sách sản phẩm
-                    } else {
-                        url = ADD_PAGE;
-                        request.setAttribute("errorMessage", "Insert failed.");
-                    }
+            // Tạo đối tượng productDTO với dữ liệu nhập vào
+            productDTO product = new productDTO(productname, description, category_id, quantity, price, status, image);
+
+            if (!checkError) {
+                boolean inserted = productDAO.add(product);
+                if (inserted) {
+                    url = HOME_PAGE;
+                    request.getSession().setAttribute("successMessage", "Add Successfully!");
+                    processSearch(request, response); // Load lại danh sách sản phẩm
                 } else {
-                    request.setAttribute("product", product);
                     url = ADD_PAGE;
+                    request.setAttribute("errorMessage", "Insert failed.");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                request.setAttribute("errorMessage", "An error occurred while adding the product.");
+            } else {
+                request.setAttribute("product", product); // Giữ lại dữ liệu nhập vào
                 url = ADD_PAGE;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An error occurred while adding the product.");
+            url = ADD_PAGE;
         }
         return url;
     }
@@ -322,13 +358,20 @@ public class MainController extends HttpServlet {
 
     private String processHome(HttpServletRequest request, HttpServletResponse response) {
         try {
+            HttpSession session = request.getSession();
+            if (!AuthUtils.isAdmin(session)) {
+                List<CategoryDTO> listC = productDAO.getAllCategory();
+                List<productDTO> listP = productDAO.readAll();
 
-            List<CategoryDTO> listC = productDAO.getAllCategory();
-            List<productDTO> listP = productDAO.readAll();
+                request.setAttribute("listC", listC);
+                request.setAttribute("listP", listP);
+            } else if (AuthUtils.isAdmin(session)) {
+                List<CategoryDTO> listC = productDAO.getAllCategory();
+                List<productDTO> listP = productDAO.readAllAD();
 
-            request.setAttribute("listC", listC);
-            request.setAttribute("listP", listP);
-
+                request.setAttribute("listC", listC);
+                request.setAttribute("listP", listP);
+            }
             return "home.jsp"; // Chuyển đến trang chủ
         } catch (Exception e) {
             log("Error at processHome: " + e.toString());
@@ -336,79 +379,105 @@ public class MainController extends HttpServlet {
         }
     }
 
-    private String processAddToCart(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+    private String processAddToCart(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        int productId = Integer.parseInt(request.getParameter("pid"));
 
-            if (cart == null) {
-                cart = new ArrayList<>();
-                session.setAttribute("cart", cart);
+        if (AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session)) {
+            // Lấy thông tin sản phẩm từ database
+            productDAO dao = new productDAO();
+            productDTO product = dao.readByID(productId);
+
+            if (product == null) {
+                request.setAttribute("message", "Sản phẩm không tồn tại.");
+                return "error.jsp";
             }
 
-            int id = Integer.parseInt(request.getParameter("id"));
-            String productName = request.getParameter("productName");
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            float price = Float.parseFloat(request.getParameter("price"));
-            String image = request.getParameter("image");
+            // Lấy giỏ hàng từ session (nếu chưa có thì tạo mới)
+            List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+            if (cart == null) {
+                cart = new ArrayList<>();
+            }
 
-            // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+            // Kiểm tra xem sản phẩm đã có trong giỏ chưa
             boolean found = false;
             for (CartItemDTO item : cart) {
-                if (item.getId() == id) {
-                    item.setQuantity(item.getQuantity() + quantity);
+                if (item.getId() == productId) {
+                    item.setQuantity(item.getQuantity() + 1);
                     found = true;
                     break;
                 }
             }
 
-            // Nếu chưa có, thêm mới vào giỏ hàng
+            // Nếu chưa có trong giỏ hàng, thêm mới
             if (!found) {
-                CartItemDTO newItem = new CartItemDTO(id, productName, quantity, price, image);
+                CartItemDTO newItem = new CartItemDTO(
+                        product.getId(),
+                        product.getProductname(),
+                        1, // Mặc định thêm 1 sản phẩm
+                        product.getPrice(),
+                        product.getSrcimg()
+                );
                 cart.add(newItem);
             }
 
-            request.setAttribute("message", "Sản phẩm đã được thêm vào giỏ hàng!");
-            return "cart.jsp"; // Chuyển hướng đến trang giỏ hàng
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi thêm sản phẩm vào giỏ hàng.");
-            return "home.jsp";
+            // Cập nhật giỏ hàng trong session
+            session.setAttribute("cart", cart);
+
+            // Chuyển hướng về trang giỏ hàng hoặc sản phẩm
+            return "MainController?action=viewcart";
+        } else if (!AuthUtils.isLoggedIn(session)) {
+            return LOGIN_PAGE;
         }
+        return processHome(request, response);
     }
 
-    private String processRemoveFromCart(HttpServletRequest request, HttpServletResponse response)
+    private String processRemoveFromCart(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        int productId = Integer.parseInt(request.getParameter("pid"));
+
+        List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+        if (cart != null) {
+            cart.removeIf(item -> item.getId() == productId);
+            session.setAttribute("cart", cart);
+        }
+
+        return "MainController?action=viewcart";
+    }
+
+    private String processCheckout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
+        if (AuthUtils.isLoggedIn(session) && !AuthUtils.isAdmin(session)) {
+            if (cart == null || cart.isEmpty()) {
+                request.setAttribute("message", "Giỏ hàng trống, không thể thanh toán.");
+                return "cart.jsp";
+            }
+
+            // Xử lý thanh toán (giả định)
+            session.removeAttribute("cart"); // Xóa giỏ hàng sau khi thanh toán
+            request.setAttribute("message", "Thanh toán thành công!");
+
+            return "checkoutSuccess.jsp"; // Tạo trang này để hiển thị thông báo thành công
+        }
+        return processHome(request, response);
+    }
+
+    private String processViewCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession();
             List<CartItemDTO> cart = (List<CartItemDTO>) session.getAttribute("cart");
 
-            if (cart != null) {
-                int id = Integer.parseInt(request.getParameter("id"));
-                cart.removeIf(item -> item.getId() == id);
+            if (cart == null || cart.isEmpty()) {
+                request.setAttribute("message", "Giỏ hàng của bạn đang trống.");
             }
 
-            return "cart.jsp";
+            return "cart.jsp"; // Chuyển hướng đến trang giỏ hàng
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi xóa sản phẩm khỏi giỏ hàng.");
-            return "cart.jsp";
-        }
-    }
-
-    private String processCheckout(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            HttpSession session = request.getSession();
-            session.removeAttribute("cart"); // Xóa giỏ hàng sau khi thanh toán
-
-            request.setAttribute("message", "Thanh toán thành công!");
-            return "cart.jsp";
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Lỗi khi thanh toán.");
-            return "cart.jsp";
+            request.setAttribute("error", "Lỗi khi hiển thị giỏ hàng.");
+            return "home.jsp";
         }
     }
 
@@ -464,8 +533,12 @@ public class MainController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
 
-        response.setContentType("text/html;charset=UTF-8");
+        // Đặt encoding cho response để hiển thị đúng
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
         String url = LOGIN_PAGE;
 
         try {
@@ -493,6 +566,14 @@ public class MainController extends HttpServlet {
                     url = processHome(request, response);
                 } else if (action.equals("manage")) {
                     url = processManageAccount(request, response);
+                } else if (action.equals("addcart")) {
+                    url = processAddToCart(request, response);
+                } else if (action.equals("remove")) {
+                    url = processRemoveFromCart(request, response);
+                } else if (action.equals("checkout")) {
+                    url = processCheckout(request, response);
+                } else if (action.equals("viewcart")) {
+                    url = processViewCart(request, response);
                 }
             }
 //            your code here
@@ -517,6 +598,11 @@ public class MainController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        // Đặt encoding cho response để hiển thị đúng
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
     }
 
     /**
@@ -531,6 +617,11 @@ public class MainController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        // Đặt encoding cho response để hiển thị đúng
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
     }
 
     /**

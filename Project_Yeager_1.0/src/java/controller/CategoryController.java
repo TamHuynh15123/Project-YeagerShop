@@ -16,6 +16,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.AuthUtils;
 
 /**
  *
@@ -38,13 +40,22 @@ public class CategoryController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int cateID = Integer.parseInt(request.getParameter("cid"));
         productDAO dao = new productDAO();
-        
-        List<productDTO> list = dao.getProductByCate(cateID);
-        List<CategoryDTO> listC = dao.getAllCategory();
-        request.setAttribute("listP", list);
-        request.setAttribute("listC", listC);
-        request.setAttribute("tag", cateID);
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        if (!AuthUtils.isAdmin(session)) {
+            List<productDTO> list = dao.getProductByCate(cateID);
+            List<CategoryDTO> listC = dao.getAllCategory();
+            request.setAttribute("listP", list);
+            request.setAttribute("listC", listC);
+            request.setAttribute("tag", cateID);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
+        } else {
+            List<productDTO> list = dao.getProductByCateAD(cateID);
+            List<CategoryDTO> listC = dao.getAllCategory();
+            request.setAttribute("listP", list);
+            request.setAttribute("listC", listC);
+            request.setAttribute("tag", cateID);
+            request.getRequestDispatcher("home.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
